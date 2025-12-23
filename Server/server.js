@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
     // ])
 
     console.log(io.sockets.adapter.sids.keys());
-    let activeSockets = Array.from(io.sockets.adapter.sids.keys())
+    let activeSockets = Array.from(io.sockets.adapter.sids.keys());
     console.log(activeSockets);
     
     io.emit("server-activeSockets", activeSockets);

@@ -16,6 +16,11 @@ socket.on("server-message", (message) => {
 })
 
 socket.on("server-activeSockets", (activeSockets) => {
+    for (let i = 0; i < activeSockets.length; i++) {
+        if (activeSockets[i] === socket.id) {
+            activeSockets.splice(i,1);
+        }
+    }
     displaySocket(activeSockets);
 })
 
@@ -33,12 +38,25 @@ sendRoomBTN.addEventListener("click", function (){
 });
 
 function displaySocket(socketArray) {
-    socketArray.forEach(socket => {
+    let socketNodeViews = socketView.children;
+    console.log(socketArray);
+    for (let i = 0; i < socketArray.length; i++) {
         let socketValue = document.createElement("div");
-        socketValue.textContent = socket;
+        socketValue.textContent = socketArray[i];
         socketValue.style.padding = "2.5px";
+        
+        //The list view of active sockets does not work for multi socket scenarios
+        //TODO: Revisit and rewrite to present ONLY the active sockets
+
+        //Deletes child if a child element of socketValue is unequal to the socketArray
+        for (let j = 0; j < socketNodeViews.length; j++) {
+            console.log(socketNodeViews[j].innerText);
+            if (socketNodeViews[j].innerText !== socketArray[i]) {
+                socketNodeViews[j].remove();
+            }  
+        }
         socketView.append(socketValue);
-    });
+    }
 }
 
 function displayMessage(message) {
