@@ -15,15 +15,16 @@ const io = new Server(serverExpress, {
 });
 
 io.on('connection', (socket) => {
-    // let activeSockets = new Map ([
-    
-    // ])
-
     console.log(io.sockets.adapter.sids.keys());
     let activeSockets = Array.from(io.sockets.adapter.sids.keys());
     console.log(activeSockets);
     
     io.emit("server-activeSockets", activeSockets);
+
+    socket.on("disconnect", () => {
+        let new_activeSockets = Array.from(io.sockets.adapter.sids.keys());
+        io.emit("server-activeSockets", new_activeSockets);
+    })
 
     socket.on("room-request", (room) => { 
         socket.join(room);

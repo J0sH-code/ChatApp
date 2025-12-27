@@ -16,12 +16,8 @@ socket.on("server-message", (message) => {
 })
 
 socket.on("server-activeSockets", (activeSockets) => {
-    for (let i = 0; i < activeSockets.length; i++) {
-        if (activeSockets[i] === socket.id) {
-            activeSockets.splice(i,1);
-        }
-    }
-    displaySocket(activeSockets);
+    const filteredSockets = activeSockets.filter(id => id !== socket.id);
+    displaySocket(filteredSockets);
 })
 
 sendMessageBTN.addEventListener("click", function (event) {
@@ -38,24 +34,24 @@ sendRoomBTN.addEventListener("click", function (){
 });
 
 function displaySocket(socketArray) {
-    let socketNodeViews = socketView.children;
-    console.log(socketArray);
-    for (let i = 0; i < socketArray.length; i++) {
-        let socketValue = document.createElement("div");
-        socketValue.textContent = socketArray[i];
-        socketValue.style.padding = "2.5px";
-        
-        //The list view of active sockets does not work for multi socket scenarios
-        //TODO: Revisit and rewrite to present ONLY the active sockets
+    const existingNodes = Array.from(socketView.children);
+    const existingIds = existingNodes.map(node => node.innerText);
 
-        //Deletes child if a child element of socketValue is unequal to the socketArray
-        for (let j = 0; j < socketNodeViews.length; j++) {
-            console.log(socketNodeViews[j].innerText);
-            if (socketNodeViews[j].innerText !== socketArray[i]) {
-                socketNodeViews[j].remove();
-            }  
+    // Remove sockets that no longer exist
+    for (const node of existingNodes) {
+        if (!socketArray.includes(node.innerText)) {
+            node.remove();
         }
-        socketView.append(socketValue);
+    }
+
+    // Add sockets that are new
+    for (const id of socketArray) {
+        if (!existingIds.includes(id)) {
+            const socketValue = document.createElement("div");
+            socketValue.textContent = id;
+            socketValue.style.padding = "2.5px";
+            socketView.append(socketValue);
+        }
     }
 }
 
