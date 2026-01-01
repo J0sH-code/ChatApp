@@ -6,6 +6,10 @@ const idInput = document.getElementById("id-input");
 const sendIdBTN = document.getElementById("send-id");
 const messageView = document.querySelector("#show-content");
 const socketView = document.querySelector(".socket-holder");
+const popUpId = document.getElementById("request-id");
+const popUpOverlay = document.querySelector(".popup-overlay");
+const popUpAcceptBtn = document.getElementById("accept-btn");
+const popUpIgnoreBtn = document.getElementById("ignore-btn");
 
 const socket = io ("http://localhost:3000");
 
@@ -20,6 +24,26 @@ socket.on("server-message", (message) => {
 socket.on("server-activeSockets", (activeSockets) => {
     const filteredSockets = activeSockets.filter(id => id !== socket.id);
     displaySocket(filteredSockets);
+})
+
+socket.on("id-requestNotice", (senderId) => {
+    displayMessage(senderId);
+    idRequestNotice(senderId);
+
+    popUpAcceptBtn.addEventListener("click", () => {
+        socket.emit("accept-IDreq", senderId, (serverNotice) => {
+            displayMessage(serverNotice);
+        });
+        remove_idRequestNotice(null);
+    });
+
+    popUpIgnoreBtn.addEventListener("click", () => {
+        remove_idRequestNotice(null);
+        socket.emit("reject-IDreq", senderId, (serverNotice) => {
+            displayMessage(serverNotice);
+        });
+    });
+
 })
 
 sendMessageBTN.addEventListener("click", (event) => {
@@ -40,10 +64,11 @@ sendRoomBTN.addEventListener("click", () => {
 
 sendIdBTN.addEventListener("click", () => {
     let receiverId = idInput.value;
+    let senderId = socket.id;
     displayMessage(`Button clicked`);
-    socket.emit("id-request", receiverId, (serverNotice) => {
+    socket.emit("id-request", receiverId, senderId,(serverNotice) => {
         displayMessage(serverNotice);
-    })
+    }) 
 })
 
 function displaySocket(socketArray) {
@@ -66,6 +91,16 @@ function displaySocket(socketArray) {
             socketView.append(socketValue);
         }
     }
+}
+
+function idRequestNotice(id) {
+    popUpOverlay.classList.remove("hide");
+    popUpId.textContent = id;
+}
+
+function remove_idRequestNotice(id = null) {
+    popUpOverlay.classList.add("hide");
+    popUpId.textContent = id;
 }
 
 function displayMessage(message) {

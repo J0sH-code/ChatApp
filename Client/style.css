@@ -90,3 +90,65 @@ body {
     width: 50vw;
     background-color: white;
 }
+
+.popup-overlay {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  width: 200px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.popup h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.popup p {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.popup-actions button {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#accept-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+#ignore-btn {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.popup-actions button:hover {
+  opacity: 0.9;
+}
+
+.hide{
+    display: none;
+}

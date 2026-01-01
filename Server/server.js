@@ -19,6 +19,7 @@ io.on('connection', (socket) => {
 
     let activeSockets = Array.from(io.sockets.adapter.sids.keys());
     let id = null;
+    let socketConnected;
     console.log(activeSockets);
     
     //Sends list of active sockets to the client
@@ -30,11 +31,35 @@ io.on('connection', (socket) => {
         io.emit("server-activeSockets", new_activeSockets);
     })
 
-    socket.on("id-request", (receiverId, serverNotice) => {
+    //Handles id request for specific message connections
+    socket.on("id-request", (receiverId, senderId, serverSendNotice) => {
         id = receiverId;
         console.log(id);
-            
-        serverNotice(`Sending to ${id}`);
+        serverSendNotice(`Requesting to ${id}`);
+
+        //TODO add confirmation if reciever accepts connection request
+        if (socketConnected) {
+            serverSendNotice(`Sending to ${id}`);
+        } 
+        
+        if (!socketConnected) {
+            serverSendNotice(`${id} rejected request`)
+        }
+
+        socket.to(id).emit("id-requestNotice", senderId);
+    });
+
+    socket.on("accept-IDreq", (senderId, serverSendNotice) => {
+        socketConnected = true;
+        id = senderId;
+        serverSendNotice(`Sending to ${id}`);
+    })
+
+    
+    socket.on("reject-IDreq", (senderId, serverSendNotice) => {
+        socketConnected = false;
+        id = senderId;
+        serverSendNotice(`Request rejected`);
     })
     
     /*
