@@ -2,6 +2,8 @@ const messageInput = document.getElementById("message-input");
 const sendMessageBTN = document.getElementById("send-message");
 const roomInput = document.getElementById("room-input");
 const sendRoomBTN = document.getElementById("send-room");
+const idInput = document.getElementById("id-input");
+const sendIdBTN = document.getElementById("send-id");
 const messageView = document.querySelector("#show-content");
 const socketView = document.querySelector(".socket-holder");
 
@@ -20,7 +22,7 @@ socket.on("server-activeSockets", (activeSockets) => {
     displaySocket(filteredSockets);
 })
 
-sendMessageBTN.addEventListener("click", function (event) {
+sendMessageBTN.addEventListener("click", (event) => {
     event.preventDefault();
     let message = messageInput.value;
     console.log(message);
@@ -28,10 +30,21 @@ sendMessageBTN.addEventListener("click", function (event) {
     socket.emit("client-message", message);
 })
 
-sendRoomBTN.addEventListener("click", function (){
+sendRoomBTN.addEventListener("click", () => {
     let room = roomInput.value;
-    socket.emit("room-request", room);
+    displayMessage(room);
+    socket.emit("room-request", room, (serverNotice) => {
+        displayMessage(serverNotice)
+    });
 });
+
+sendIdBTN.addEventListener("click", () => {
+    let receiverId = idInput.value;
+    displayMessage(`Button clicked`);
+    socket.emit("id-request", receiverId, (serverNotice) => {
+        displayMessage(serverNotice);
+    })
+})
 
 function displaySocket(socketArray) {
     const existingNodes = Array.from(socketView.children);

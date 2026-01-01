@@ -83,3 +83,10 @@ body {
     background-color: aliceblue;
     cursor: pointer;
 }
+
+#idConnect-prompt{
+    position: sticky;
+    z-index: 1;
+    width: 50vw;
+    background-color: white;
+}
