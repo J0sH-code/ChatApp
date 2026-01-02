@@ -27,23 +27,29 @@ socket.on("server-activeSockets", (activeSockets) => {
 })
 
 socket.on("id-requestNotice", (senderId) => {
-    displayMessage(senderId);
     idRequestNotice(senderId);
 
     popUpAcceptBtn.addEventListener("click", () => {
-        socket.emit("accept-IDreq", senderId, (serverNotice) => {
+        socket.emit("accept-IDreq", senderId, socket.id, (serverNotice) => {
             displayMessage(serverNotice);
         });
         remove_idRequestNotice(null);
     });
 
     popUpIgnoreBtn.addEventListener("click", () => {
-        remove_idRequestNotice(null);
-        socket.emit("reject-IDreq", senderId, (serverNotice) => {
+        socket.emit("reject-IDreq", senderId, socket.id,(serverNotice) => {
             displayMessage(serverNotice);
         });
+        remove_idRequestNotice(null);
     });
+})
 
+socket.on("IdConnect-accepted", (acceptMessage) => {
+    displayMessage(acceptMessage);
+})
+
+socket.on("IdConnect-rejected", (acceptMessage) => {
+    displayMessage(acceptMessage);
 })
 
 sendMessageBTN.addEventListener("click", (event) => {

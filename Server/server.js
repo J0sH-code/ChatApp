@@ -37,29 +37,21 @@ io.on('connection', (socket) => {
         console.log(id);
         serverSendNotice(`Requesting to ${id}`);
 
-        //TODO add confirmation if reciever accepts connection request
-        if (socketConnected) {
-            serverSendNotice(`Sending to ${id}`);
-        } 
-        
-        if (!socketConnected) {
-            serverSendNotice(`${id} rejected request`)
-        }
-
         socket.to(id).emit("id-requestNotice", senderId);
     });
 
-    socket.on("accept-IDreq", (senderId, serverSendNotice) => {
+    socket.on("accept-IDreq", (senderId, receiverId,serverSendNotice) => {
         socketConnected = true;
         id = senderId;
         serverSendNotice(`Sending to ${id}`);
+        socket.to(id).emit("IdConnect-accepted", `Sending to ${receiverId}`);
     })
 
-    
-    socket.on("reject-IDreq", (senderId, serverSendNotice) => {
+    socket.on("reject-IDreq", (senderId, receiverId,serverSendNotice) => {
         socketConnected = false;
         id = senderId;
         serverSendNotice(`Request rejected`);
+        socket.to(id).emit("IdConnect-rejected", `${receiverId} rejected request`);
     })
     
     /*
