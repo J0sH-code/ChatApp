@@ -113,5 +113,16 @@ function displayMessage(message) {
     let messageValue = document.createElement("div");
     messageValue.textContent = message;
     messageValue.style.padding = "2.5px";
+    
     messageView.append(messageValue);
 }
+
+
+//TODO figure encryption
+// function encryptMessage(message) {
+//     let encMessage;
+//     SubtleCrypto.encrypt({ name: 'RSA-OAEP' }, 'any', message)
+//         .then(ciphertext => encMessage = ciphertext);
+    
+//     return encMessage;
+// }
