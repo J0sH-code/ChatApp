@@ -118,7 +118,7 @@ function displayMessage(message) {
 }
 
 
-//TODO figure encryption
+//TODO figure encryption 
 // function encryptMessage(message) {
 //     let encMessage;
 //     SubtleCrypto.encrypt({ name: 'RSA-OAEP' }, 'any', message)

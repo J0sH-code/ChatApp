@@ -22,6 +22,11 @@ io.on('connection', (socket) => {
     let socketConnected;
     console.log(activeSockets);
     
+    //TODO Placeholder for socket connections
+    let socketMap = new Map ([
+
+    ])
+
     //Sends list of active sockets to the client
     io.emit("server-activeSockets", activeSockets);
 
