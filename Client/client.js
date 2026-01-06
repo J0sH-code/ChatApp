@@ -57,7 +57,7 @@ sendMessageBTN.addEventListener("click", (event) => {
     let message = messageInput.value;
     console.log(message);
     displayMessage(`Sent: ${message}`);
-    socket.emit("client-message", message);
+    socket.emit("client-message", messageStructure(message));
 })
 
 sendRoomBTN.addEventListener("click", () => {
@@ -117,6 +117,14 @@ function displayMessage(message) {
     messageView.append(messageValue);
 }
 
+function messageStructure(message){
+    let messageData = {
+        message: message,
+        createdAt: new Date().toLocaleString(),
+        senderID: socket.id,
+    };
+    return messageData;
+}
 
 //TODO figure encryption 
 // function encryptMessage(message) {

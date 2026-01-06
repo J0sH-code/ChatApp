@@ -24,9 +24,7 @@ io.on('connection', (socket) => {
     console.log(activeSockets);
     
     //TODO Placeholder for socket connections
-    let socketMap = new Map ([
-
-    ]);
+    let socketMap = new Map ();
 
     
     //Sends list of active sockets to the client
@@ -65,9 +63,15 @@ io.on('connection', (socket) => {
     socket.on("accept-IDreq", (senderId, receiverId,serverSendNotice) => {
         connectedRoom  = null;
         socketConnected = true;
+
+        //TODO eliminate local variables with session object for each socket's connection state
+        socketMap.set(receiverId, {mode: "direct", connectedTo: senderId});
+        socketMap.set(senderId, {mode: "direct", connectedTo: receiverId});
+
         id = senderId;
-        serverSendNotice(`Sending to ${id}`);
+        serverSendNotice(`Sending to ${senderId}`);
         socket.to(id).emit("IdConnect-accepted", `Sending to ${receiverId}`);
+        
     })
 
     socket.on("reject-IDreq", (senderId, receiverId,serverSendNotice) => {
@@ -81,9 +85,11 @@ io.on('connection', (socket) => {
      * Handles and recieve message from client
      * Sends message to other client
      */
-    socket.on("client-message", (message) => {
-        if (id === null && connectedRoom === null) socket.broadcast.emit("server-message", message);
-        if (id !== null) socket.to(id).emit("server-message", message);
-        if (connectedRoom !== null) socket.to(connectedRoom).emit("server-message", message);
+    socket.on("client-message", (messageStructure) => {
+        console.log(messageStructure);
+        
+        if (id === null && connectedRoom === null) socket.broadcast.emit("server-message", messageStructure.message);
+        if (id !== null) socket.to(id).emit("server-message", messageStructure.message);
+        if (connectedRoom !== null) socket.to(connectedRoom).emit("server-message", messageStructure.message);
     });
 })
