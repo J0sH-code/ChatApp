@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io';
+import { Server} from 'socket.io';
 import  express  from 'express';
 
 const port = process.env.port || 3000;
@@ -14,6 +14,16 @@ const io = new Server(serverExpress, {
     }
 });
 
+function setSessionMap(activeSockets, socketMap) {
+    for (let index = 0; index < activeSockets.length; index++) {
+        socketMap.set(activeSockets[index], {sessionMode: "public", connected_id: null, connected_room: null});
+        console.log(socketMap.get(activeSockets[index]).sessionMode);
+    }
+}
+
+//Holds socket connection states
+let socketMap = new Map ();
+
 io.on('connection', (socket) => {
     console.log(io.sockets.adapter.sids.keys());
 
@@ -23,10 +33,8 @@ io.on('connection', (socket) => {
     let socketConnected;
     console.log(activeSockets);
     
-    //TODO Placeholder for socket connections
-    let socketMap = new Map ();
+    socketMap.set(socket.id, {sessionMode: "public", connected_id: null, connected_room: null});
 
-    
     //Sends list of active sockets to the client
     io.emit("server-activeSockets", activeSockets);
 
@@ -36,10 +44,9 @@ io.on('connection', (socket) => {
      */
     
     socket.on("room-request", (room, serverSendNotice) => {
-        id = null
-        connectedRoom = room;
-        socket.join(connectedRoom);
+        socket.join(room);
 
+        socketMap.set(socket.id, {sessionMode: "room", connected_id: null, connected_room: room})
         serverSendNotice(`Joined ${Array.from(socket.rooms.values())[1]}`);
     })
 
@@ -52,33 +59,23 @@ io.on('connection', (socket) => {
 
     //Handles id request for specific message connections
     socket.on("id-request", (receiverId, senderId, serverSendNotice) => {
-        connectedRoom  = null;
-        id = receiverId;
-        console.log(id);
-        serverSendNotice(`Requesting to ${id}`);
-
-        socket.to(id).emit("id-requestNotice", senderId);
+        serverSendNotice(`Requesting to ${receiverId}`);
+        socket.to(receiverId).emit("id-requestNotice", senderId);
     });
 
-    socket.on("accept-IDreq", (senderId, receiverId,serverSendNotice) => {
-        connectedRoom  = null;
-        socketConnected = true;
+    socket.on("accept-IDreq", (senderId, receiverId, serverSendNotice) => {
+        socketMap.set(receiverId, {sessionMode: "direct", connected_id: senderId, connected_room: null});
+        socketMap.set(senderId, {sessionMode: "direct", connected_id: receiverId, connected_room: null});
 
-        //TODO eliminate local variables with session object for each socket's connection state
-        socketMap.set(receiverId, {mode: "direct", connectedTo: senderId});
-        socketMap.set(senderId, {mode: "direct", connectedTo: receiverId});
-
-        id = senderId;
         serverSendNotice(`Sending to ${senderId}`);
-        socket.to(id).emit("IdConnect-accepted", `Sending to ${receiverId}`);
+        socket.to(senderId).emit("IdConnect-accepted", `Sending to ${receiverId}`);
+        console.log(socketMap);
         
     })
 
     socket.on("reject-IDreq", (senderId, receiverId,serverSendNotice) => {
-        socketConnected = false;
-        id = senderId;
         serverSendNotice(`RequIest rejected`);
-        socket.to(id).emit("IdConnect-rejected", `${receiverId} rejected request`);
+        socket.to(senderId).emit("IdConnect-rejected", `${receiverId} rejected request`);
     })
     
     /*
@@ -86,10 +83,22 @@ io.on('connection', (socket) => {
      * Sends message to other client
      */
     socket.on("client-message", (messageStructure) => {
-        console.log(messageStructure);
+        let thisSocket = messageStructure.senderID;
         
-        if (id === null && connectedRoom === null) socket.broadcast.emit("server-message", messageStructure.message);
-        if (id !== null) socket.to(id).emit("server-message", messageStructure.message);
-        if (connectedRoom !== null) socket.to(connectedRoom).emit("server-message", messageStructure.message);
+        switch (socketMap.get(thisSocket).sessionMode) {
+            case "direct":
+                socket.to(socketMap.get(thisSocket).connected_id).emit("server-message", messageStructure.message);
+                console.log(socketMap.get(thisSocket).connected_id);
+                
+                break;
+            case "room":
+                socket.to(socketMap.get(thisSocket).connected_room).emit("server-message", messageStructure.message);
+                break;
+            case "public":
+                socket.broadcast.emit("server-message", messageStructure.message);
+                break;
+            default:
+                break;
+        }
     });
 })
