@@ -54,6 +54,9 @@ io.on('connection', (socket) => {
     //Handles socket disconnect
     socket.on("disconnect", () => {
         let new_activeSockets = Array.from(io.sockets.adapter.sids.keys());
+
+        //TODO Send a notice to the socket connected to this ID
+        socketMap.delete(socket.id)
         io.emit("server-activeSockets", new_activeSockets);
     })
 
