@@ -14,13 +14,6 @@ const io = new Server(serverExpress, {
     }
 });
 
-function setSessionMap(activeSockets, socketMap) {
-    for (let index = 0; index < activeSockets.length; index++) {
-        socketMap.set(activeSockets[index], {sessionMode: "public", connected_id: null, connected_room: null});
-        console.log(socketMap.get(activeSockets[index]).sessionMode);
-    }
-}
-
 //Holds socket connection states
 let socketMap = new Map ();
 
@@ -28,9 +21,6 @@ io.on('connection', (socket) => {
     console.log(io.sockets.adapter.sids.keys());
 
     let activeSockets = Array.from(io.sockets.adapter.sids.keys());
-    let id = null;
-    let connectedRoom = null;
-    let socketConnected;
     console.log(activeSockets);
     
     socketMap.set(socket.id, {sessionMode: "public", connected_id: null, connected_room: null});
@@ -56,7 +46,8 @@ io.on('connection', (socket) => {
         let new_activeSockets = Array.from(io.sockets.adapter.sids.keys());
 
         //TODO Send a notice to the socket connected to this ID
-        socketMap.delete(socket.id)
+        socketMap.set(socket.id, {sessionMode: "public", connected_id: null, connected_room: null});
+        socketMap.delete(socket.id);
         io.emit("server-activeSockets", new_activeSockets);
     })
 
@@ -92,7 +83,6 @@ io.on('connection', (socket) => {
             case "direct":
                 socket.to(socketMap.get(thisSocket).connected_id).emit("server-message", messageStructure.message);
                 console.log(socketMap.get(thisSocket).connected_id);
-                
                 break;
             case "room":
                 socket.to(socketMap.get(thisSocket).connected_room).emit("server-message", messageStructure.message);
