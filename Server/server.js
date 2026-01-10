@@ -44,11 +44,13 @@ io.on('connection', (socket) => {
     //Handles socket disconnect
     socket.on("disconnect", () => {
         let new_activeSockets = Array.from(io.sockets.adapter.sids.keys());
+        
+        //Sends a notice to the socket connected to this ID
+        let disconnect_message = `${socket.id} has disconnected, reverting to public message connection`
 
-        //TODO Send a notice to the socket connected to this ID
         socketMap.set(socket.id, {sessionMode: "public", connected_id: null, connected_room: null});
         socketMap.delete(socket.id);
-        io.emit("server-activeSockets", new_activeSockets);
+        io.emit("socket-disconnect", new_activeSockets, disconnect_message);
     })
 
     //Handles id request for specific message connections

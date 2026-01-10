@@ -21,7 +21,8 @@ socket.on("server-message", (message) => {
     displayMessage(`Recieved: ${message}`);
 })
 
-socket.on("server-activeSockets", (activeSockets) => {
+socket.on("socket-disconnect", (activeSockets, disconnect_message) => {
+    const disconnect_message = disconnect_message;
     const filteredSockets = activeSockets.filter(id => id !== socket.id);
     displaySocket(filteredSockets);
 })
