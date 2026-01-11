@@ -79,7 +79,8 @@ io.on('connection', (socket) => {
      * Sends message to other client
      */
     socket.on("client-message", (messageStructure) => {
-        let thisSocket = messageStructure.senderID;
+        let thisSocket = socket.id;
+        console.log(socketMap.get(thisSocket));
         
         switch (socketMap.get(thisSocket).sessionMode) {
             case "direct":
