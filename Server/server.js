@@ -17,13 +17,26 @@ const io = new Server(serverExpress, {
 //Holds socket connection states
 let socketMap = new Map ();
 
+function setPublic (socketId) {
+    socketMap.set(socketId, {sessionMode: "public", connected_id: null, connected_room: null});
+};
+
+function directConnect (socket1, socket2) {
+    socketMap.set(socket1, {sessionMode: "direct", connected_id: socket2, connected_room: null});
+    socketMap.set(socket2, {sessionMode: "direct", connected_id: socket1, connected_room: null});
+};
+
+function roomConnect(socketId, room) {
+    socketMap.set(socketId, {sessionMode: "room", connected_id: null, connected_room: room})
+}
+
 io.on('connection', (socket) => {
     console.log(io.sockets.adapter.sids.keys());
 
     let activeSockets = Array.from(io.sockets.adapter.sids.keys());
     console.log(activeSockets);
-    
-    socketMap.set(socket.id, {sessionMode: "public", connected_id: null, connected_room: null});
+
+    setPublic(socket.id);
 
     //Sends list of active sockets to the client
     io.emit("server-activeSockets", activeSockets);
@@ -36,19 +49,21 @@ io.on('connection', (socket) => {
     socket.on("room-request", (room, serverSendNotice) => {
         socket.join(room);
 
-        socketMap.set(socket.id, {sessionMode: "room", connected_id: null, connected_room: room})
+        roomConnect(socket.id, room);
         serverSendNotice(`Joined ${Array.from(socket.rooms.values())[1]}`);
     })
-
 
     //Handles socket disconnect
     socket.on("disconnect", () => {
         let new_activeSockets = Array.from(io.sockets.adapter.sids.keys());
         
         //Sends a notice to the socket connected to this ID
-        let disconnect_message = `${socket.id} has disconnected, reverting to public message connection`
-
-        socketMap.set(socket.id, {sessionMode: "public", connected_id: null, connected_room: null});
+        let disconnect_message = `${socket.id} has disconnected, reverting to public message connection`;
+        
+        if (socketMap.get(socket.id).sessionMode === "direct") {
+            const connectedSocket = socketMap.get(socket.id).connected_id;
+            setPublic(connectedSocket);
+        }
         socketMap.delete(socket.id);
         io.emit("socket-disconnect", new_activeSockets, disconnect_message);
     })
@@ -60,13 +75,11 @@ io.on('connection', (socket) => {
     });
 
     socket.on("accept-IDreq", (senderId, receiverId, serverSendNotice) => {
-        socketMap.set(receiverId, {sessionMode: "direct", connected_id: senderId, connected_room: null});
-        socketMap.set(senderId, {sessionMode: "direct", connected_id: receiverId, connected_room: null});
+        directConnect(receiverId,senderId);
 
         serverSendNotice(`Sending to ${senderId}`);
         socket.to(senderId).emit("IdConnect-accepted", `Sending to ${receiverId}`);
         console.log(socketMap);
-        
     })
 
     socket.on("reject-IDreq", (senderId, receiverId,serverSendNotice) => {
