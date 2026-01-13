@@ -16,6 +16,7 @@ const io = new Server(serverExpress, {
 
 //Holds socket connection states
 let socketMap = new Map ();
+let systemMessage;
 
 function setPublic (socketId) {
     socketMap.set(socketId, {sessionMode: "public", connected_id: null, connected_room: null});
@@ -45,7 +46,6 @@ io.on('connection', (socket) => {
      * Handles and recieve room numbers from client
      * Sends confirmation if socket successfully joined room
      */
-    
     socket.on("room-request", (room, serverSendNotice) => {
         socket.join(room);
 
@@ -58,19 +58,24 @@ io.on('connection', (socket) => {
         let new_activeSockets = Array.from(io.sockets.adapter.sids.keys());
         
         //Sends a notice to the socket connected to this ID
-        let disconnect_message = `${socket.id} has disconnected, reverting to public message connection`;
+        systemMessage = {
+            type: "system",
+            content: `${socket.id} has disconnected, reverting to public message connection`,
+            timestamp: Date.now()
+        } 
         
         if (socketMap.get(socket.id).sessionMode === "direct") {
             const connectedSocket = socketMap.get(socket.id).connected_id;
             setPublic(connectedSocket);
         }
         socketMap.delete(socket.id);
-        io.emit("socket-disconnect", new_activeSockets, disconnect_message);
+        io.emit("socket-disconnect", new_activeSockets, systemMessage);
     })
 
     //Handles id request for specific message connections
     socket.on("id-request", (receiverId, senderId, serverSendNotice) => {
         serverSendNotice(`Requesting to ${receiverId}`);
+
         socket.to(receiverId).emit("id-requestNotice", senderId);
     });
 
@@ -91,20 +96,20 @@ io.on('connection', (socket) => {
      * Handles and recieve message from client
      * Sends message to other client
      */
-    socket.on("client-message", (messageStructure) => {
+    socket.on("client-message", (userMessage) => {
         let thisSocket = socket.id;
         console.log(socketMap.get(thisSocket));
         
         switch (socketMap.get(thisSocket).sessionMode) {
             case "direct":
-                socket.to(socketMap.get(thisSocket).connected_id).emit("server-message", messageStructure.message);
+                socket.to(socketMap.get(thisSocket).connected_id).emit("server-message", userMessage.message);
                 console.log(socketMap.get(thisSocket).connected_id);
                 break;
             case "room":
-                socket.to(socketMap.get(thisSocket).connected_room).emit("server-message", messageStructure.message);
+                socket.to(socketMap.get(thisSocket).connected_room).emit("server-message", userMessage.message);
                 break;
             case "public":
-                socket.broadcast.emit("server-message", messageStructure.message);
+                socket.broadcast.emit("server-message", userMessage.message);
                 break;
             default:
                 break;

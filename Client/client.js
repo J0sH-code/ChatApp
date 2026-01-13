@@ -26,9 +26,9 @@ socket.on("server-activeSockets", (activeSockets) => {
     displaySocket(filteredSockets);
 })
 
-socket.on("socket-disconnect", (activeSockets, disconnect_message) => {
-    let disconnect_prompt = disconnect_message;
+socket.on("socket-disconnect", (activeSockets, systemMessage) => {
     const filteredSockets = activeSockets.filter(id => id !== socket.id);
+    displayMessage(systemMessage.content);
     displaySocket(filteredSockets);
 })
 
@@ -63,7 +63,7 @@ sendMessageBTN.addEventListener("click", (event) => {
     let message = messageInput.value;
     console.log(message);
     displayMessage(`Sent: ${message}`);
-    socket.emit("client-message", messageStructure(message));
+    socket.emit("client-message", userMessage(message));
 })
 
 sendRoomBTN.addEventListener("click", () => {
@@ -123,10 +123,11 @@ function displayMessage(message) {
     messageView.append(messageValue);
 }
 
-function messageStructure(message){
+function userMessage(message){
     let messageData = {
+        type: "user",
         message: message,
-        createdAt: new Date().toLocaleString(),
+        timestamp: Date.now(),
         senderID: socket.id,
     };
     return messageData;
