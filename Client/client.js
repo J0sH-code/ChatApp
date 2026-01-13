@@ -126,7 +126,7 @@ function displayMessage(message) {
 function userMessage(message){
     let messageData = {
         type: "user",
-        message: message,
+        content: message,
         timestamp: Date.now(),
         senderID: socket.id,
     };

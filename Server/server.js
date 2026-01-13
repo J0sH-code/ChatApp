@@ -31,6 +31,34 @@ function roomConnect(socketId, room) {
     socketMap.set(socketId, {sessionMode: "room", connected_id: null, connected_room: room})
 }
 
+function routeMessage(socket, message) {
+    const session = socketMap.get(socket.id);
+
+    if (!session) {
+        return {ok: "false", reason: "no-session"};
+    }
+
+    switch (session.sessionMode) {
+        case "direct":
+            if (!session.connected_id) {
+                return {ok: "false", reason: "no-id"};
+            }
+            socket.to(session.connected_id).emit("server-message", message);
+            return {ok: "true"};
+        case "room":
+            if (!session.connected_room) {
+                return {ok: "false", reason: "no-room"};
+            }
+            socket.to(session.connected_room).emit("server-message", message);
+            return {ok: "true"};
+        case "public":
+            socket.broadcast.emit("server-message", message);
+            return { ok: true };
+        default:
+            return {ok: "false", reason: "unknown-mode"};
+    }
+}
+
 io.on('connection', (socket) => {
     console.log(io.sockets.adapter.sids.keys());
 
@@ -97,22 +125,10 @@ io.on('connection', (socket) => {
      * Sends message to other client
      */
     socket.on("client-message", (userMessage) => {
-        let thisSocket = socket.id;
-        console.log(socketMap.get(thisSocket));
-        
-        switch (socketMap.get(thisSocket).sessionMode) {
-            case "direct":
-                socket.to(socketMap.get(thisSocket).connected_id).emit("server-message", userMessage.message);
-                console.log(socketMap.get(thisSocket).connected_id);
-                break;
-            case "room":
-                socket.to(socketMap.get(thisSocket).connected_room).emit("server-message", userMessage.message);
-                break;
-            case "public":
-                socket.broadcast.emit("server-message", userMessage.message);
-                break;
-            default:
-                break;
+        const response = routeMessage(socket, userMessage.content);
+
+        if (!response.ok) {
+            socket.emit("server-error", result.reason);
         }
     });
 })
