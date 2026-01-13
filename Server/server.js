@@ -41,21 +41,21 @@ function routeMessage(socket, message) {
     switch (session.sessionMode) {
         case "direct":
             if (!session.connected_id) {
-                return {ok: "false", reason: "no-id"};
+                return {ok: false, reason: "no-id"};
             }
             socket.to(session.connected_id).emit("server-message", message);
-            return {ok: "true"};
+            return {ok: true};
         case "room":
             if (!session.connected_room) {
-                return {ok: "false", reason: "no-room"};
+                return {ok: false, reason: "no-room"};
             }
             socket.to(session.connected_room).emit("server-message", message);
-            return {ok: "true"};
+            return {ok: true};
         case "public":
             socket.broadcast.emit("server-message", message);
             return { ok: true };
         default:
-            return {ok: "false", reason: "unknown-mode"};
+            return {ok: false, reason: "unknown-mode"};
     }
 }
 
@@ -131,4 +131,4 @@ io.on('connection', (socket) => {
             socket.emit("server-error", result.reason);
         }
     });
-})
+});
