@@ -11,6 +11,7 @@ io.on('connection', (socket) => {
 
     setPublic(socket.id);
 
+    //TODO Fix the showActiveSocket route
     //Sends list of active sockets to the client
     io.emit("server-activeSockets", activeSockets);
 
