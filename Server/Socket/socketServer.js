@@ -1,17 +1,18 @@
-import {setPublic} from "./sessions.js";
+import { setPublic } from "./sessions.js";
 import handlers from "./handlers.js";
 import { io } from "../server.js";
+import { socketMap } from "./sessions.js";
 
-io.on('connection', (socket) => {
-    const handler = new handlers(socket,io);
+export default function socketServer(socket) {
     console.log(io.sockets.adapter.sids.keys());
 
     let activeSockets = Array.from(io.sockets.adapter.sids.keys());
+    let handler = new handlers (socket);
     console.log(activeSockets);
 
     setPublic(socket.id);
-
-    //TODO Fix the showActiveSocket route
+    console.log(socketMap);
+    
     //Sends list of active sockets to the client
     io.emit("server-activeSockets", activeSockets);
 
@@ -26,7 +27,7 @@ io.on('connection', (socket) => {
             console.log(error);
         }
     })
-
+    
     //Handles socket disconnect
     socket.on("disconnect", () => {
         try {
@@ -73,4 +74,4 @@ io.on('connection', (socket) => {
         }
         
     });
-});
+}

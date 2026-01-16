@@ -1,7 +1,4 @@
-import sessions from "./sessions.js";
-const session = new sessions();
-let socketMap = session.socketMap;
-
+import { socketMap } from "./sessions.js";
 export default function routeMessage(socket, message) {
     const session = socketMap.get(socket.id);
 

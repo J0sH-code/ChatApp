@@ -1,5 +1,5 @@
-let socketMap = new Map ();
-export default socketMap;
+export let socketMap = new Map ();
+
 
 export function setPublic (socketId) {
         socketMap.set(socketId, {sessionMode: "public", connected_id: null, connected_room: null});

@@ -27,8 +27,9 @@ socket.on("server-activeSockets", (activeSockets) => {
 })
 
 socket.on("socket-disconnect", (activeSockets, systemMessage) => {
+    let message = JSON.parse(systemMessage);
     const filteredSockets = activeSockets.filter(id => id !== socket.id);
-    displayMessage(systemMessage.content);
+    displayMessage(message.content);
     displaySocket(filteredSockets);
 })
 
@@ -63,6 +64,8 @@ sendMessageBTN.addEventListener("click", (event) => {
     let message = messageInput.value;
     console.log(message);
     displayMessage(`Sent: ${message}`);
+    console.log(userMessage(message));
+    
     socket.emit("client-message", userMessage(message));
 })
 
@@ -130,7 +133,7 @@ function userMessage(message){
         timestamp: Date.now(),
         senderID: socket.id,
     };
-    return messageData;
+    return JSON.stringify(messageData);
 }
 
 //TODO figure encryption 

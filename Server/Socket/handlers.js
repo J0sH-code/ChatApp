@@ -1,15 +1,14 @@
 import {socketMap, setPublic, directConnect, roomConnect} from "./sessions.js";
 import routeMessage from "./router.js";
+import { io } from "../server.js";
 
 export default class handlers {
-    constructor(socket, io) {
+    constructor(socket) {
         this.socket = socket;
-        this.io = io;
     }
 
     onRoomRequest(room, serverSendNotice) {
         this.socket.join(room);
-        
         roomConnect(this.socket.id, room);
         serverSendNotice(`Joined ${Array.from(socket.rooms.values())[1]}`);
     };
@@ -29,7 +28,7 @@ export default class handlers {
             setPublic(connectedSocket);
         }
         socketMap.delete(this.socket.id);
-        this.io.emit("socket-disconnect", new_activeSockets, systemMessage);
+        io.emit("socket-disconnect", new_activeSockets, JSON.stringify(systemMessage));
     };
 
     onIdRequest(receiverId, senderId, serverSendNotice){
@@ -52,7 +51,8 @@ export default class handlers {
     };
 
     onClientMessage(userMessage){
-        const response = routeMessage(this.socket, userMessage.content);
+        let messageBlock = JSON.parse(userMessage);
+        const response = routeMessage(this.socket, messageBlock.content);
 
         if(!response.ok){
             this.socket.emit("server-error", response.reason);
