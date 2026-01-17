@@ -8,6 +8,10 @@ export default class handlers {
     }
 
     onRoomRequest(room, serverSendNotice) {
+        if (room == null) {
+            const reason = "Room cannot be recieved";
+            this.socket.emit("server-error", reason);
+        }
         this.socket.join(room);
         roomConnect(this.socket.id, room);
         serverSendNotice(`Joined ${Array.from(socket.rooms.values())[1]}`);
