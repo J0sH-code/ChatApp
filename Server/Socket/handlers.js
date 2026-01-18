@@ -2,16 +2,21 @@ import {socketMap, setPublic, directConnect, roomConnect} from "./sessions.js";
 import routeMessage from "./router.js";
 import { io } from "../server.js";
 
+function inputCheck(input, reasonContent) {
+    if (input == null) {
+        const reason = `${reasonContent} not recieved`;
+        this.socket.emit("server-error", reason);
+    }
+}
+
 export default class handlers {
     constructor(socket) {
         this.socket = socket;
     }
 
     onRoomRequest(room, serverSendNotice) {
-        if (room == null) {
-            const reason = "Room cannot be recieved";
-            this.socket.emit("server-error", reason);
-        }
+        inputCheck(room, "Room");
+
         this.socket.join(room);
         roomConnect(this.socket.id, room);
         serverSendNotice(`Joined ${Array.from(socket.rooms.values())[1]}`);
@@ -36,12 +41,14 @@ export default class handlers {
     };
 
     onIdRequest(receiverId, senderId, serverSendNotice){
+        inputCheck(receiverId, "Requested ID");
         serverSendNotice(`Requesting to ${receiverId}`);
 
         this.socket.to(receiverId).emit("id-requestNotice", senderId);
     };
 
     onAcceptId(senderId, receiverId, serverSendNotice){
+        inputCheck(senderId, "Sender ID");
         directConnect(receiverId,senderId);
 
         serverSendNotice(`Sending to ${senderId}`);
