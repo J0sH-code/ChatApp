@@ -136,11 +136,20 @@ function userMessage(message){
     return JSON.stringify(messageData);
 }
 
-//TODO figure encryption 
-// function encryptMessage(message) {
-//     let encMessage;
-//     SubtleCrypto.encrypt({ name: 'RSA-OAEP' }, 'any', message)
-//         .then(ciphertext => encMessage = ciphertext);
-    
-//     return encMessage;
-// }
+
+//TODO Continue writing encryption module and test for fucntionality 
+async function getKey() {
+    let key = await window.crypto.subtle.generateKey({
+        name: "RSA-OAEP",
+        modulusLength: 4096,
+        publicExponent: new Uint8Array ([1,0,1]),
+        hash: {name: "SHA-512"}
+    }, "true", ["encrypt","decrypt"]
+    );
+    return key;
+}
+
+
+function encryptMessage(message) {
+    return window.crypto.subtle.encrypt({ name: 'RSA-OAEP' }, getKey, message);;
+}
