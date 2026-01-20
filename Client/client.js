@@ -26,10 +26,15 @@ socket.on("server-activeSockets", (activeSockets) => {
     displaySocket(filteredSockets);
 })
 
-socket.on("socket-disconnect", (activeSockets, systemMessage) => {
+socket.on("direct-socket-disconnect", (activeSockets, systemMessage) => {
     let message = JSON.parse(systemMessage);
     const filteredSockets = activeSockets.filter(id => id !== socket.id);
     displayMessage(message.content);
+    displaySocket(filteredSockets);
+})
+
+socket.on("public-socket-disconnect", (activeSockets) => {
+    const filteredSockets = activeSockets.filter(id => id !== socket.id);
     displaySocket(filteredSockets);
 })
 
@@ -65,6 +70,8 @@ sendMessageBTN.addEventListener("click", (event) => {
     console.log(message);
     displayMessage(`Sent: ${message}`);
     console.log(userMessage(message));
+    console.log(encryptMessage(message));
+    console.log(getKey());
     
     socket.emit("client-message", userMessage(message));
 })
@@ -138,7 +145,13 @@ function userMessage(message){
 
 
 //TODO Continue writing encryption module and test for fucntionality 
-async function getKey() {
+// async function getKey() {
+    
+
+//     return key;
+// }
+
+async function encryptMessage(message) {
     let key = await window.crypto.subtle.generateKey({
         name: "RSA-OAEP",
         modulusLength: 4096,
@@ -146,10 +159,5 @@ async function getKey() {
         hash: {name: "SHA-512"}
     }, "true", ["encrypt","decrypt"]
     );
-    return key;
-}
-
-
-function encryptMessage(message) {
-    return window.crypto.subtle.encrypt({ name: 'RSA-OAEP' }, getKey, message);;
+    return window.crypto.subtle.encrypt({ name: 'RSA-OAEP' }, key, message);
 }

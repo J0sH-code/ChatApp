@@ -9,6 +9,14 @@ function inputCheck(input, reasonContent) {
     }
 }
 
+function disconnectMessage(socketId) {
+    return {
+            type: "system",
+            content: `${socketId} has disconnected, reverting to public message connection`,
+            timestamp: Date.now()
+        } 
+}
+
 export default class handlers {
     constructor(socket) {
         this.socket = socket;
@@ -26,18 +34,14 @@ export default class handlers {
         let new_activeSockets = Array.from(io.sockets.adapter.sids.keys());
         
         //Sends a notice to the socket connected to this ID
-        let systemMessage = {
-            type: "system",
-            content: `${this.socket.id} has disconnected, reverting to public message connection`,
-            timestamp: Date.now()
-        } 
-        
         if (socketMap.get(this.socket.id).sessionMode === "direct") {
             const connectedSocket = socketMap.get(this.socket.id).connected_id;
+
+            io.to(connectedSocket).emit("direct-socket-disconnect", new_activeSockets, JSON.stringify(disconnectMessage(this.socket.id)));
             setPublic(connectedSocket);
         }
         socketMap.delete(this.socket.id);
-        io.emit("socket-disconnect", new_activeSockets, JSON.stringify(systemMessage));
+        io.emit("public-socket-disconnect", new_activeSockets);
     };
 
     onIdRequest(receiverId, senderId, serverSendNotice){
@@ -63,6 +67,8 @@ export default class handlers {
 
     onClientMessage(userMessage){
         let messageBlock = JSON.parse(userMessage);
+        console.log(messageBlock);
+        
         const response = routeMessage(this.socket, messageBlock.content);
 
         if(!response.ok){
