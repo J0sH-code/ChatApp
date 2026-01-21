@@ -11,10 +11,10 @@ function inputCheck(input, reasonContent) {
 
 function disconnectMessage(socketId) {
     return {
-            type: "system",
-            content: `${socketId} has disconnected, reverting to public message connection`,
-            timestamp: Date.now()
-        } 
+        type: "system",
+        content: `${socketId} has disconnected, reverting to public message connection`,
+        timestamp: Date.now()
+    }
 }
 
 export default class handlers {
@@ -32,7 +32,7 @@ export default class handlers {
 
     onDisconnect(){
         let new_activeSockets = Array.from(io.sockets.adapter.sids.keys());
-        
+
         //Sends a notice to the socket connected to this ID
         if (socketMap.get(this.socket.id).sessionMode === "direct") {
             const connectedSocket = socketMap.get(this.socket.id).connected_id;
@@ -68,7 +68,7 @@ export default class handlers {
     onClientMessage(userMessage){
         let messageBlock = JSON.parse(userMessage);
         console.log(messageBlock);
-        
+
         const response = routeMessage(this.socket, messageBlock.content);
 
         if(!response.ok){

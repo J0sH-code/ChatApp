@@ -12,7 +12,7 @@ export default function socketServer(socket) {
 
     setPublic(socket.id);
     console.log(socketMap);
-    
+
     //Sends list of active sockets to the client
     io.emit("server-activeSockets", activeSockets);
 
@@ -27,7 +27,7 @@ export default function socketServer(socket) {
             console.log(error);
         }
     })
-    
+
     //Handles socket disconnect
     socket.on("disconnect", () => {
         try {
@@ -48,7 +48,7 @@ export default function socketServer(socket) {
 
     socket.on("accept-IDreq", (senderId, receiverId, serverSendNotice) => {
         try {
-            handler.onAcceptId(senderId, receiverId, serverSendNotice);    
+            handler.onAcceptId(senderId, receiverId, serverSendNotice);
         } catch (error) {
             console.log(error);
         }
@@ -56,12 +56,12 @@ export default function socketServer(socket) {
 
     socket.on("reject-IDreq", (senderId, receiverId,serverSendNotice) => {
         try {
-            handler.onRejectId(senderId, receiverId,serverSendNotice);    
+            handler.onRejectId(senderId, receiverId,serverSendNotice);
         } catch (error) {
             console.log(error);
         }
     })
-    
+
     /*
      * Handles and recieve message from client
      * Sends message to other client
@@ -72,6 +72,6 @@ export default function socketServer(socket) {
         } catch (error) {
             console.log(error);
         }
-        
+
     });
 }

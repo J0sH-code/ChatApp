@@ -64,15 +64,19 @@ socket.on("IdConnect-rejected", (acceptMessage) => {
     displayMessage(acceptMessage);
 })
 
-sendMessageBTN.addEventListener("click", (event) => {
-    event.preventDefault();
+sendMessageBTN.addEventListener("click", async () => {
+    const keyPair = await getKey();
     let message = messageInput.value;
+    const encryptedMessage = await encryptMessage(message, keyPair);
+
     console.log(message);
+
     displayMessage(`Sent: ${message}`);
     console.log(userMessage(message));
-    console.log(encryptMessage(message));
-    console.log(getKey());
-    
+    console.log(encryptedMessage);
+    console.log(keyPair);
+    console.log(keyPair.publicKey);
+
     socket.emit("client-message", userMessage(message));
 })
 
@@ -90,7 +94,7 @@ sendIdBTN.addEventListener("click", () => {
     displayMessage(`Button clicked`);
     socket.emit("id-request", receiverId, senderId,(serverNotice) => {
         displayMessage(serverNotice);
-    }) 
+    })
 })
 
 function displaySocket(socketArray) {
@@ -129,7 +133,7 @@ function displayMessage(message) {
     let messageValue = document.createElement("div");
     messageValue.textContent = message;
     messageValue.style.padding = "2.5px";
-    
+
     messageView.append(messageValue);
 }
 
@@ -144,20 +148,17 @@ function userMessage(message){
 }
 
 
-//TODO Continue writing encryption module and test for fucntionality 
-// async function getKey() {
-    
-
-//     return key;
-// }
-
-async function encryptMessage(message) {
-    let key = await window.crypto.subtle.generateKey({
+//TODO Continue writing encryption module and test for fucntionality
+async function getKey() {
+    return keyPair = await window.crypto.subtle.generateKey({
         name: "RSA-OAEP",
         modulusLength: 4096,
         publicExponent: new Uint8Array ([1,0,1]),
         hash: {name: "SHA-512"}
-    }, "true", ["encrypt","decrypt"]
-    );
-    return window.crypto.subtle.encrypt({ name: 'RSA-OAEP' }, key, message);
+    }, true, ["encrypt", "decrypt"]);
+}
+
+function encryptMessage(message, keyPair) {
+    const encoded = new TextEncoder().encode(message);
+    return window.crypto.subtle.encrypt({ name: 'RSA-OAEP' }, keyPair.publicKey, encoded);
 }
