@@ -17,8 +17,13 @@ socket.on("connect", () => {
     displayMessage(`You connected with id: ${socket.id}`);
 })
 
-socket.on("server-message", (message) => {
-    displayMessage(`Recieved: ${message}`);
+socket.on("server-message", async (message) => {
+    const keyPair = await getKey();
+    console.log(keyPair);
+    const messageBlock = await JSON.parse(decryptMessage(message, keyPair));
+
+    displayMessage(`Recieved: ${messageBlock.content}`);
+    console.log(messageBlock);
 })
 
 socket.on("server-activeSockets", (activeSockets) => {
@@ -67,7 +72,7 @@ socket.on("IdConnect-rejected", (acceptMessage) => {
 sendMessageBTN.addEventListener("click", async () => {
     const keyPair = await getKey();
     let message = messageInput.value;
-    const encryptedMessage = await encryptMessage(message, keyPair);
+    const encryptedMessage = await encryptMessage(userMessage(message), keyPair);
 
     console.log(message);
 
@@ -77,7 +82,7 @@ sendMessageBTN.addEventListener("click", async () => {
     console.log(keyPair);
     console.log(keyPair.publicKey);
 
-    socket.emit("client-message", userMessage(message));
+    socket.emit("client-message", encryptedMessage);
 })
 
 sendRoomBTN.addEventListener("click", () => {
@@ -161,4 +166,11 @@ async function getKey() {
 function encryptMessage(message, keyPair) {
     const encoded = new TextEncoder().encode(message);
     return window.crypto.subtle.encrypt({ name: 'RSA-OAEP' }, keyPair.publicKey, encoded);
+}
+
+//TODO fix client decryption module
+async function decryptMessage(encryptedMessage, keyPair) {
+    let message = await window.crypto.subtle.decrypt({ name: 'RSA-OAEP' }, keyPair.privateKey, encryptedMessage);
+    console.log(message);
+    return new TextDecoder().decode(message);
 }
