@@ -68,6 +68,7 @@ export default function socketServer(socket) {
      */
     socket.on("client-message", (userMessage) => {
         try {
+            console.log(userMessage)
             handler.onClientMessage(userMessage);
         } catch (error) {
             console.log(error);

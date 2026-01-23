@@ -66,10 +66,10 @@ export default class handlers {
     };
 
     onClientMessage(userMessage){
-        let messageBlock = JSON.parse(userMessage);
-        console.log(messageBlock);
+        //let messageBlock = JSON.parse(userMessage);
+        console.log(userMessage);
 
-        const response = routeMessage(this.socket, messageBlock.content);
+        const response = routeMessage(this.socket, userMessage);
 
         if(!response.ok){
             this.socket.emit("server-error", response.reason);

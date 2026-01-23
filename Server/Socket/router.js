@@ -1,7 +1,7 @@
 import { socketMap } from "./sessions.js";
 export default function routeMessage(socket, message) {
   const session = socketMap.get(socket.id);
-  
+
     if (!session) {
         return {ok: false, reason: "no-session"};
     }

@@ -11,19 +11,25 @@ const popUpOverlay = document.querySelector(".popup-overlay");
 const popUpAcceptBtn = document.getElementById("accept-btn");
 const popUpIgnoreBtn = document.getElementById("ignore-btn");
 
+let keyPair = getKey();
+
 const socket = io ("http://localhost:3000");
 
 socket.on("connect", () => {
     displayMessage(`You connected with id: ${socket.id}`);
 })
 
-socket.on("server-message", async (message) => {
-    const keyPair = await getKey();
-    console.log(keyPair);
-    const messageBlock = await JSON.parse(decryptMessage(message, keyPair));
+socket.on("server-message", async (message, privateKey) => {
+    //console.log(keyPair);
+    const messageBlock = message;
+    //const decodedContent = new TextDecoder().decode(messageBlock.content);
+    const decryptedMessage = await decryptMessage(message, privateKey.privateKey);
 
     displayMessage(`Recieved: ${messageBlock.content}`);
+    console.log(privateKey);
     console.log(messageBlock);
+    console.log(typeof messageBlock);
+    //console.log(decodedContent);
 })
 
 socket.on("server-activeSockets", (activeSockets) => {
@@ -70,19 +76,20 @@ socket.on("IdConnect-rejected", (acceptMessage) => {
 })
 
 sendMessageBTN.addEventListener("click", async () => {
-    const keyPair = await getKey();
     let message = messageInput.value;
-    const encryptedMessage = await encryptMessage(userMessage(message), keyPair);
+    const encryptedMessage = await encryptMessage(userMessage(message), await keyPair);
+    // let messageRelay = new TextEncoder().encode(encryptedMessage);
 
     console.log(message);
 
     displayMessage(`Sent: ${message}`);
-    console.log(userMessage(message));
+    console.log(userMessage(encryptedMessage, keyPair.privateKey));
     console.log(encryptedMessage);
+    //console.log(messageRelay);
     console.log(keyPair);
     console.log(keyPair.publicKey);
 
-    socket.emit("client-message", encryptedMessage);
+    socket.emit("client-message", encryptedMessage, keyPair);
 })
 
 sendRoomBTN.addEventListener("click", () => {
@@ -142,16 +149,20 @@ function displayMessage(message) {
     messageView.append(messageValue);
 }
 
-function userMessage(message){
+function userMessage(message, privateKey){
     let messageData = {
         type: "user",
         content: message,
         timestamp: Date.now(),
         senderID: socket.id,
+        privateKey: privateKey,
     };
     return JSON.stringify(messageData);
 }
 
+function String(encryptedMessage) {
+    encryptedMessage
+}
 
 //TODO Continue writing encryption module and test for fucntionality
 async function getKey() {
