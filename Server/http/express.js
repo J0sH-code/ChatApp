@@ -9,15 +9,16 @@ app.get("/", (req, res) => {
 })
 
 app.post("/post", (req, res) => {
-    res.send({ status: "Get route working" });
+    const requestContent = req.body;
+    res.send({ status: "Post route working" });
 })
 
 app.patch("/patch", (req, res) => {
-    res.send({ status: "Get route working" });
+    res.send({ status: "Patch route working" });
 })
 
 app.delete("/delete", (req, res) => {
-    res.send({ status: "Get route working" });
+    res.send({ status: "Delete route working" });
 })
 
 export default app;
