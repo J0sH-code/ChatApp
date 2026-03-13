@@ -22,7 +22,7 @@ async function generateAESKey() {
       name: "AES-GCM",
       length: 256
     },
-    true, // extractable
+    true, 
     ["encrypt", "decrypt"]
   );
 

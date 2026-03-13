@@ -37,15 +37,12 @@ export function setupSocketListeners() {
      * Decrypts using current session key and displays to user
      */
     socket.on("server-message", async (message) => {
-        const messageBlock = message;
         const currentKey = getKey();
         const decryptedMessage = await decryptMessage(message, currentKey);
         const messageObj = JSON.parse(decryptedMessage);
 
         displayMessage(`Recieved: ${messageObj.content}`);
-        console.log(privateKey);
-        console.log(messageBlock);
-        console.log(typeof messageBlock);
+        console.log(message);
     });
 
     /**
