@@ -32,24 +32,36 @@
 
 
             <div class="input-window">
-                <div class="input-row">
-                    <input type="text" id="message-input" placeholder= "Type a message">
 
-                    <button type="button" id="send-message">Send</button>
-                </div>
-
-                <div class="input-row">
+                <div id="roomSection" class = "addSection hide">
                     <input type="text" id="room-input" placeholder= "Room ID">
                     <button type="button" id="send-room">Join</button>
                 </div>
 
-                <div class="input-row">
+                <div id="idSection" class = "addSection hide">
                     <input type="text" id="id-input" placeholder= "Connect with ID">
                     <button type="button" id="send-id">Confirm</button>
                 </div>
-            </div>
+
+                <div class="input-row">
+                    <input type="text" id="message-input" placeholder= "Type a message">
+
+                    <button type="button" id="send-message">Send</button>
+
+                    <div class="menu-container">
+                        <button id="menuButton">+</button>
+
+                        <div id="menuDropdown" class="menu-dropdown">
+                            <button id="openRoom">Join Room</button>
+                            <button id="openId">Direct Message</button>
+
+                        </div>
+                    </div>
+                </div>
+                </div>
 
             <div class="popup-overlay hide">
+
                 <div class="popup">
                     <h3>Incoming Message Request</h3>
                     <p>
@@ -62,6 +74,8 @@
                         <button id="ignore-btn">Ignore</button>
                     </div>
                 </div>
+
+               
             </div>
     </body>
 

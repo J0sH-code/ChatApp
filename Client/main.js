@@ -2,21 +2,28 @@
  * Main Entry Point Module
  * Initializes the chat application and sets up event listeners
  */
-
 import { 
     setupSocketListeners, 
     sendClientMessage, 
     requestRoom, 
     requestDirectConnection 
 } from "./socketClient.js";
+
 import { 
     messageInput, 
     sendMessageBTN, 
     roomInput, 
     sendRoomBTN, 
     idInput, 
-    sendIdBTN 
+    sendIdBTN,
+    menuButton,
+    dropdown,
+    openRoom,
+    openId,
+    idSection,
+    roomSection
 } from "./domElements.js";
+
 import { displayMessage } from "./ui.js";
 
 // Initialize socket connection and listeners
@@ -27,7 +34,7 @@ setupSocketListeners();
  */
 sendMessageBTN.addEventListener("click", async () => {
     let message = messageInput.value;
-    
+
     if (message.trim() === "") {
         return; // Don't send empty messages
     }
@@ -44,13 +51,14 @@ sendMessageBTN.addEventListener("click", async () => {
  */
 sendRoomBTN.addEventListener("click", async () => {
     let room = roomInput.value;
-    
+
     if (room.trim() === "") {
         return; // Don't send empty room names
     }
 
     displayMessage(room);
     await requestRoom(room);
+    roomSection.classList.add("hide");
 });
 
 /**
@@ -58,10 +66,63 @@ sendRoomBTN.addEventListener("click", async () => {
  */
 sendIdBTN.addEventListener("click", async () => {
     let receiverId = idInput.value;
-    
+
     if (receiverId.trim() === "") {
         return; // Don't send empty IDs
     }
 
     await requestDirectConnection(receiverId);
+    idSection.classList.add("hide");
 });
+
+
+// Add Enter Key to send message
+messageInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        sendMessageBTN.click();
+    }
+});
+idInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        sendIdBTN.click();
+    }
+});
+roomInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        sendRoomBTN.click();
+    }
+});
+
+
+
+// click button, ig
+menuButton.addEventListener("click", () => {
+    dropdown.style.display =
+        dropdown.style.display === "block" ? "none" : "block";
+});
+
+
+// just so it clears when you click outside the menu
+document.addEventListener("click", (e) => {
+    if (!menuButton.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = "none";
+    }
+});
+
+
+// another pop up sections
+openRoom.addEventListener("click", () => {
+    roomSection.classList.remove("hide");
+    idSection.classList.add("hide");
+    dropdown.style.display = "none";
+    roomInput.focus();
+});
+
+
+openId.addEventListener("click", () => {
+    idSection.classList.remove("hide");
+    roomSection.classList.add("hide");
+    dropdown.style.display = "none";
+    idInput.focus();
+});
+
