@@ -4,10 +4,16 @@
   box-sizing: border-box;
 }
 body {
-	background: linear-gradient(-45deg, #ee7752, #e73c3c, #23a6d5, #23d5ab);
+    overflow: hidden;
 	background-size: 400% 400%;
 	animation: gradient 15s ease infinite;
 	height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(
+        circle at top,
+        #f7f8fc,
+        #e8ecf5
+    );
 }
 
 @keyframes gradient {
@@ -24,29 +30,101 @@ body {
 
 .layout{
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 70px 1fr auto;
+    grid-template-columns: 250px 1fr;
+    gap: 0;
 }
 
-.message-holder{
-    height: 50vh;
-    width: 50vw;
-    border: 3px solid rgb(252, 248, 236);
+.title {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+    border-radius: 0;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-family: 'Courier', monospace;
+    font-weight: bold;
+    
+    background: linear-gradient(
+        135deg,
+        #ff74bd,
+        #de369d,
+        #b72d80
+    );
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.chatapp-title h1 {
+    padding-top: 5%;
+    font-size: 30px;
+    display: flex;
+    width: 20%;
     border-radius: 20px;
-    background-color: aliceblue;
+    color: white;
+    font-family: 'Courier', monospace;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    font-weight: bold;
+    
+
+}
+
+
+.message-holder{
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #f7f9fc 100%
+    ),
+}
+
+.message {
+    max-width: 70%;
+    padding: 8px 12px;
+    border-radius: 20px;
+    word-wrap: break-word;
+    margin-bottom: 8px;
+}
+.message.sent {
+    align-self: flex-end;
+    background-color: #e4e6eb;
+    color: white;
+}
+.message.received {
+    align-self: flex-start;
+    background-color: #e4e6eb;
+    color: black;
 }
 
 .socket-holder{
-    height: 80vh;
-    width: 23.5vw;
-    position: fixed;
-    top: 42.5px;
-    margin: 5px;
-    border: 1px solid rgb(93, 164, 222);
-    border-radius: 20px;
-    background-color: rgb(37, 64, 88);
+    grid-row: 2 / 4;    
+    grid-column: 1 / 2; 
+    color: white;
+    border-right: 1px solid #5da4de;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+
+    background: linear-gradient(
+        180deg,
+        #2c4b6b,
+        #223a55
+    );
+
+    box-shadow: inset -2px 0 6px rgba(0,0,0,0.15);
 }
 
 #show-content{
@@ -56,25 +134,56 @@ body {
 }
 
 .input-window {
-    margin: 10px;
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+    padding: 10px;
     display: flex;
+    gap: 10px;
     flex-direction: column;
-    gap: 8px;
+
+    background: linear-gradient(
+        180deg,
+        #ffffff,
+        #f3f5f9
+    );
+
+    border-top: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+}
+
+.input-window input {
+    flex: 1;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    padding: 10px; 
+    background-color: #0084ff;
+    color: black;
+    cursor: pointer;
 }
 
 .input-row {
     display: flex;
+    flex: 1;
     gap: 6px;
 }
 
 .input-row input {
-    width: 40vw;
+    flex: 1;
+    background: linear-gradient(
+        180deg,
+        #ffffff,
+        #f5f7fb
+    );
+
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .input-row button {
+    width: 10%;
     font-size: 1rem;
     padding: 8px;
-    width: 8vw; 
+    flex: none;
     border-radius: 20px;
     border: none;
 }
@@ -84,17 +193,102 @@ body {
     cursor: pointer;
 }
 
+.menu-container {
+    grid-column: 3 / 3;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#menuButton {
+    color: blue;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-dropdown {
+    display: none;
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+
+    transform: translateX(-5%);
+
+
+    background: white;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    padding: 5px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.menu-dropdown button {
+    display: block;
+    width: 140px;
+    padding: 8px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+.menu-dropdown button:hover {
+    background: #f3f5f9;
+}
+
+.addSection {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.addSection input {
+    flex: 1;
+    background: linear-gradient(
+        180deg,
+        #ffffff,
+        #f5f7fb
+    );
+
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.addSection button {
+    width: 10%;
+    font-size: 1rem;
+    padding: 8px;
+    flex: none;
+    border-radius: 20px;
+    border: none;
+}
+
+.addSection button:hover {
+    background-color: aliceblue;
+    cursor: pointer;
+}
+
 #idConnect-prompt{
-    position: sticky;
-    z-index: 1;
-    width: 50vw;
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1100;
+    max-width: 300px;
+    width: 90%;
     background-color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
 }
 
 .popup-overlay {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -106,7 +300,8 @@ body {
   background: #fff;
   padding: 20px 25px;
   border-radius: 8px;
-  width: 200px;
+  max-width: 250px;
+  width: 90%;
   text-align: center;
   font-family: Arial, sans-serif;
 }
@@ -114,6 +309,8 @@ body {
 .popup h3 {
   margin-top: 0;
   margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #333;
 }
 
 .popup p {
@@ -131,18 +328,28 @@ body {
   flex: 1;
   padding: 8px 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
 }
 
 #accept-btn {
-  background-color: #4caf50;
+  background-color: #0084ff;
   color: white;
+}
+
+#accept-btn:hover{
+    background-color: #006fd6;
 }
 
 #ignore-btn {
   background-color: #e0e0e0;
   color: #333;
+}
+
+#ignore-btn:hover {
+    background-color: #cfd2d7;
 }
 
 .popup-actions button:hover {
@@ -151,4 +358,21 @@ body {
 
 .hide{
     display: none;
+}
+button {
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+.socket-holder::-webkit-scrollbar,
+.message-holder::-webkit-scrollbar {
+  width: 6px;
+}
+
+.socket-holder::-webkit-scrollbar-thumb,
+.message-holder::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
 }

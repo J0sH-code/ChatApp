@@ -1,63 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <script defer src="/socket.io/socket.io.js"></script>
-    <script defer type="module" src="main.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>ChatApp</title>
-</head>
-<body>
-    <div class="socket-holder">
 
-    </div>
-    <div class="layout">
-        
-        <div class="message-holder">
-            <div id="show-content"></div>
-        </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <script defer src="/socket.io/socket.io.js"></script>
+        <script defer type="module" src="main.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+                      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+                      crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+                                                                                             integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <title>ChatApp</title>
+    </head>
+
+    <body>
+        <div class="layout">
+            <div class="socket-holder">
+            </div>
+
+            <div class="title">
+                <div class="chatapp-title">
+                    <h1>ChatApp</h1>
+                </div>
+            </div>
+
+            <div class="message-holder">
+                <div id="show-content"></div>
+            </div>
+
+
+            <div class="input-window">
+
+                <div id="roomSection" class = "addSection hide">
+                    <input type="text" id="room-input" placeholder= "Room ID">
+                    <button type="button" id="send-room">Join</button>
+                </div>
+
+                <div id="idSection" class = "addSection hide">
+                    <input type="text" id="id-input" placeholder= "Connect with ID">
+                    <button type="button" id="send-id">Confirm</button>
+                </div>
+
+                <div class="input-row">
+                    <input type="text" id="message-input" placeholder= "Type a message">
+
+                    <button type="button" id="send-message">Send</button>
+
+                    <div class="menu-container">
+                        <button id="menuButton">+</button>
+
+                        <div id="menuDropdown" class="menu-dropdown">
+                            <button id="openRoom">Join Room</button>
+                            <button id="openId">Direct Message</button>
+
+                        </div>
+                    </div>
+                </div>
+                </div>
 
             <div class="popup-overlay hide">
+
                 <div class="popup">
                     <h3>Incoming Message Request</h3>
                     <p>
-                        You have a message request from<br>
-                        <strong id="request-id">abcd1234</strong>
+                    You have a message request from<br>
+                    <strong id="request-id">abcd1234</strong>
                     </p>
-            
+
                     <div class="popup-actions">
                         <button id="accept-btn">Accept & Connect</button>
                         <button id="ignore-btn">Ignore</button>
                     </div>
                 </div>
+
+               
             </div>
+    </body>
 
-
-        <div id="bow"></div>
-
-        <div class="input-window">
-            <div class="input-row">
-                <input type="text" id="message-input">
-                <button type="button" id="send-message">Send</button>
-            </div>
-
-            <div class="input-row">
-                <input type="text" id="room-input">
-                <button type="button" id="send-room">Join</button>
-            </div>
-
-            <div class="input-row">
-                <input type="text" id="id-input">
-                <button type="button" id="send-id">Confirm</button>
-            </div>
-        </div>
-        
-    </div>
-
-    <div class="d-flex flex-column justify-content-center w-100 h-100"></div>
-
-</body>
 </html>
