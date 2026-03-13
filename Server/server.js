@@ -1,6 +1,6 @@
 import app from "./http/express.js";
 import { Server } from "socket.io";
-import socketServer from "./Socket/socketServer.js";
+import socketServer from "./Socket/SocketServer.js";
 
 const port = process.env.port || 3000;
 const serverExpress = app.listen(port, () =>

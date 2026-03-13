@@ -72,6 +72,5 @@ export default function socketServer(socket) {
         } catch (error) {
             console.log(error);
         }
-        
     });
 }

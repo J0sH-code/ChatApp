@@ -1,0 +1,62 @@
+/**
+ * UI Module
+ * Handles all UI rendering functions for the chat application
+ */
+
+import { messageView, socketView, popUpOverlay, popUpId } from "./domElements.js";
+
+/**
+ * Display a message in the message view
+ * @param {string} message - The message to display
+ */
+export function displayMessage(message) {
+    let messageValue = document.createElement("div");
+    messageValue.textContent = message;
+    messageValue.style.padding = "2.5px";
+
+    messageView.append(messageValue);
+}
+
+/**
+ * Display list of active sockets in the socket holder
+ * @param {array} socketArray - Array of socket IDs to display
+ */
+export function displaySocket(socketArray) {
+    const existingNodes = Array.from(socketView.children);
+    const existingIds = existingNodes.map(node => node.innerText);
+
+    // Remove sockets that no longer exist
+    for (const node of existingNodes) {
+        if (!socketArray.includes(node.innerText)) {
+            node.remove();
+        }
+    }
+
+    // Add sockets that are new
+    for (const id of socketArray) {
+        if (!existingIds.includes(id)) {
+            const socketValue = document.createElement("div");
+            socketValue.textContent = id;
+            socketValue.style.padding = "2.5px";
+            socketView.append(socketValue);
+        }
+    }
+}
+
+/**
+ * Show the ID request popup notice
+ * @param {string} id - The sender's ID to display in the popup
+ */
+export function idRequestNotice(id) {
+    popUpOverlay.classList.remove("hide");
+    popUpId.textContent = id;
+}
+
+/**
+ * Hide the ID request popup notice
+ * @param {string} id - The ID value to set (default null)
+ */
+export function remove_idRequestNotice(id = null) {
+    popUpOverlay.classList.add("hide");
+    popUpId.textContent = id;
+}

@@ -21,7 +21,7 @@ export default class handlers {
     constructor(socket) {
         this.socket = socket;
     }
-
+    
     onRoomRequest(room, serverSendNotice) {
         inputCheck(room, "Room");
 
