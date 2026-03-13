@@ -24,7 +24,7 @@ export function setupSocketListeners() {
         await setSharedKey("public-shared-key");
     });
 
-    socket.on("server-message", async (message, privateKey) => {
+    socket.on("server-message", async (message) => {
         const messageBlock = message;
         const currentKey = getKey();
         const decryptedMessage = await decryptMessage(message, currentKey);

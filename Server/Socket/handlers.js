@@ -1,4 +1,10 @@
-import {socketMap, setPublic, directConnect, roomConnect} from "./sessions.js";
+import {
+    socketMap, 
+    setPublic, 
+    directConnect, 
+    roomConnect
+} from "./sessions.js";
+
 import routeMessage from "./router.js";
 import { io } from "../server.js";
 

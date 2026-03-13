@@ -1,8 +1,11 @@
 import app from "./http/express.js";
 import { Server } from "socket.io";
 import socketServer from "./Socket/SocketServer.js";
+import dotenv from 'dotenv'
+dotenv.config()
 
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
+console.log("PORT_NUMBER:", process.env.PORT);
 const serverExpress = app.listen(port, () =>
   console.log(`Listening at port ${port}`),
 );

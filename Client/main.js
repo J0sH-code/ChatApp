@@ -63,6 +63,5 @@ sendIdBTN.addEventListener("click", async () => {
         return; // Don't send empty IDs
     }
 
-    displayMessage(`Button clicked`);
     await requestDirectConnection(receiverId);
 });
