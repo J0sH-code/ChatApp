@@ -1,6 +1,6 @@
 import app from "./http/express.js";
 import { Server } from "socket.io";
-import socketServer from "./Socket/SocketServer.js";
+import socketServer from "./Socket/socketServer.js";
 import dotenv from 'dotenv'
 dotenv.config()
 
