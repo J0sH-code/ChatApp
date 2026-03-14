@@ -80,7 +80,7 @@ export default class handlers {
             setPublic(connectedSocket);
         }
         socketMap.delete(this.socket.id);
-        io.emit("public-socket-disconnect", new_activeSockets);
+        io.emit("public-socket-disconnect", new_activeSockets, this.socket.id);
     };
 
     /**
@@ -112,7 +112,7 @@ export default class handlers {
      * Notifies requester that request was declined
      */
     onRejectId(senderId, receiverId,serverSendNotice){
-        serverSendNotice(`RequIest rejected`);
+        serverSendNotice(`Request rejected`);
         this.socket.to(senderId).emit("IdConnect-rejected", `${receiverId} rejected request`);
     };
 

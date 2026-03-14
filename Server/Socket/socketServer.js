@@ -21,6 +21,7 @@ export default function socketServer(socket) {
     // Create event handler instance for this socket
     let handler = new handlers(socket);
     console.log(activeSockets);
+    
 
     // Set socket to public mode initially
     setPublic(socket.id);

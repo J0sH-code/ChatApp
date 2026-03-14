@@ -15,13 +15,17 @@ import { popUpAcceptBtn, popUpIgnoreBtn } from "./domElements.js";
 // Socket.IO connection
 // Change to https://chatapp-1-91a9.onrender.com for production
 // Use http://localhost:3000 for local development
-export const socket = io("https://chatapp-1-91a9.onrender.com");
+export const socket = io("http://localhost:3000");
+
+let requesting = false;
+let requestedId = null;
 
 /**
  * Setup all socket event listeners
  * Registers handlers for server events related to messaging and connections
  */
 export function setupSocketListeners() {
+
     /**
      * Event: connect
      * Fires when client successfully connects to the server
@@ -74,7 +78,13 @@ export function setupSocketListeners() {
      * Notifies clients when someone disconnects from public mode
      * Updates the active sockets list
      */
-    socket.on("public-socket-disconnect", (activeSockets) => {
+    socket.on("public-socket-disconnect", (activeSockets, disconnectedId) => {
+        console.log(disconnectedId);
+        console.log(requestedId);
+        
+        if (requesting && requestedId === disconnectedId) {
+            displayMessage(`${requestedId} has disconnected. Reverting to public mode`);
+        }
         const filteredSockets = activeSockets.filter(id => id !== socket.id);
         displaySocket(filteredSockets);
     });
@@ -118,6 +128,7 @@ export function setupSocketListeners() {
      * Direct messaging can now proceed
      */
     socket.on("IdConnect-accepted", (acceptMessage) => {
+        requesting = false;
         displayMessage(acceptMessage);
     });
 
@@ -126,6 +137,7 @@ export function setupSocketListeners() {
      * Notifies requester that their connection request was rejected
      */
     socket.on("IdConnect-rejected", (acceptMessage) => {
+        requesting = false;
         displayMessage(acceptMessage);
     });
 }
@@ -158,6 +170,8 @@ export async function requestRoom(room) {
  */
 export async function requestDirectConnection(receiverId) {
     // Derive key from both socket IDs (sorted) for direct connection
+    requesting = true;
+    requestedId = receiverId;
     const sortedIds = [socket.id, receiverId].sort().join("-");
     await setSharedKey(`direct-${sortedIds}`);
     socket.emit("id-request", receiverId, socket.id, (serverNotice) => {

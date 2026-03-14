@@ -13,7 +13,7 @@ export function displayMessage(message) {
     let messageValue = document.createElement("div");
     messageValue.textContent = message;
     messageValue.style.padding = "2.5px";
-
+    messageValue.classList.add("message-texts")
     messageView.append(messageValue);
 }
 
@@ -35,10 +35,11 @@ export function displaySocket(socketArray) {
     // Add sockets that are new
     for (const id of socketArray) {
         if (!existingIds.includes(id)) {
-            const socketValue = document.createElement("div");
+            const socketValue = document.createElement("button");
+            socketValue.classList.add("socketId");
             socketValue.textContent = id;
             socketValue.style.padding = "2.5px";
-            socketView.append(socketValue);
+            socketView.appendChild(socketValue);
         }
     }
 }

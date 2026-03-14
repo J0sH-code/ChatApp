@@ -21,13 +21,28 @@ import {
     openRoom,
     openId,
     idSection,
-    roomSection
+    roomSection,
+    cancelRoomBtn,
+    cancelIdBtn,
+    socketView
 } from "./domElements.js";
 
 import { displayMessage } from "./ui.js";
 
 // Initialize socket connection and listeners
 setupSocketListeners();
+
+/**
+ * Handle clicks on dynamically created socket ID elements
+ */
+socketView.addEventListener("click", async (e) => {
+    const socketElement = e.target.closest(".socketId");
+    if (socketElement) {
+        let receiverId = socketElement.textContent.trim();
+        await requestDirectConnection(receiverId);
+        console.log(receiverId);
+    }
+});
 
 /**
  * Send Message Button Event Listener
@@ -93,14 +108,42 @@ roomInput.addEventListener("keydown", (event) => {
     }
 });
 
-
-
-// click button, ig
+// Toggle dropdown menu
 menuButton.addEventListener("click", () => {
-    dropdown.style.display =
-        dropdown.style.display === "block" ? "none" : "block";
+    dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
 });
 
+/**
+ * Open Room Section from Menu
+ */
+openRoom.addEventListener("click", () => {
+    roomSection.classList.remove("hide");
+    dropdown.style.display = "none";
+});
+
+/**
+ * Open ID Section from Menu
+ */
+openId.addEventListener("click", () => {
+    idSection.classList.remove("hide");
+    dropdown.style.display = "none";
+});
+
+/**
+ * Close Room Section Button
+ */
+cancelRoomBtn.addEventListener("click", () => {
+    roomSection.classList.add("hide");
+    roomInput.value = ""; // Clear input
+});
+
+/**
+ * Close ID Section Button
+ */
+cancelIdBtn.addEventListener("click", () => {
+    idSection.classList.add("hide");
+    idInput.value = ""; // Clear input
+});
 
 // just so it clears when you click outside the menu
 document.addEventListener("click", (e) => {
@@ -109,7 +152,6 @@ document.addEventListener("click", (e) => {
     }
 });
 
-
 // another pop up sections
 openRoom.addEventListener("click", () => {
     roomSection.classList.remove("hide");
@@ -117,7 +159,6 @@ openRoom.addEventListener("click", () => {
     dropdown.style.display = "none";
     roomInput.focus();
 });
-
 
 openId.addEventListener("click", () => {
     idSection.classList.remove("hide");
