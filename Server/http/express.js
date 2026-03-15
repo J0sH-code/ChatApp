@@ -20,6 +20,28 @@ app.use(express.static(path.join(__dirname, "../../Client")));
 // Parse incoming JSON requests
 app.use(express.json());
 
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1];
+
+    if (!authHeader) {
+        return res.status(401).json({message: "Authorization header missing"});
+    }
+
+    try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.jwtKey);
+
+    // Attach user to request
+    req.user = decoded;
+    console.log(req.user);
+    
+    next();
+  } catch (error) {
+    return res.status(403).json({ message: 'Invalid or expired token' });
+  }
+}
+
 //Trial db
 const users = [
   { id: 1, username: 'user1', password: 'password1', role: 'user' }
@@ -35,12 +57,14 @@ app.get("/", (req, res) => {
 })
 
 app.get("/login", authenticateToken, (res, req) => {
+    console.log(req.user);
+    
     res.json(users.filter(user => user.username === req.user.name));
 })
 
 app.post("/login", (req, res) => {
     const {username, password} = req.body;
-
+    
     const user = users.find(u => u.username === username && u.password === password);
 
     const payload = {
@@ -53,20 +77,6 @@ app.post("/login", (req, res) => {
     res.send({message: "Login successful", token});
 })
 
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers.authorization;
-    const token = authHeader.split(' ')[1];
-
-    if (!authHeader) {
-        return res.status(401).json({message: "Authorization header missing"});
-    }
-
-    jwt.verify(token, process.env.jwtKey, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
-}
 
 /**
  * POST /post (POST Route)
