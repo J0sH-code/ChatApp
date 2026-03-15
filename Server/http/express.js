@@ -7,6 +7,7 @@
 import express from 'express';
 import path from "path";
 import { fileURLToPath } from "url";
+import  jwt  from 'jsonwebtoken';
 
 const app = express();
 
@@ -19,6 +20,11 @@ app.use(express.static(path.join(__dirname, "../../Client")));
 // Parse incoming JSON requests
 app.use(express.json());
 
+//Trial db
+const users = [
+  { id: 1, username: 'user1', password: 'password1', role: 'user' }
+];
+
 /**
  * GET / (GET Route)
  * Returns a simple status response
@@ -27,6 +33,40 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send({ status: "Get route working" });
 })
+
+app.get("/login", authenticateToken, (res, req) => {
+    res.json(users.filter(user => user.username === req.user.name));
+})
+
+app.post("/login", (req, res) => {
+    const {username, password} = req.body;
+
+    const user = users.find(u => u.username === username && u.password === password);
+
+    const payload = {
+        id: user.id,
+        username: user.username,
+        role: user.role
+    }
+
+    const token = jwt.sign(payload, process.env.jwtKey, { expiresIn: '1h' });
+    res.send({message: "Login successful", token});
+})
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1];
+
+    if (!authHeader) {
+        return res.status(401).json({message: "Authorization header missing"});
+    }
+
+    jwt.verify(token, process.env.jwtKey, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+}
 
 /**
  * POST /post (POST Route)
