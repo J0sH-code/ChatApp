@@ -49,7 +49,6 @@ export function displaySocket(socketArray) {
  * @param {string} id - The sender's ID to display in the popup
  */
 export function idRequestNotice(id) {
-    document.getElementById("request-id").textContent = id;
     document.getElementById("request-id-expanded").textContent = id;
     notificationPopup.classList.remove("hide");
     notificationBody.classList.add("hide");

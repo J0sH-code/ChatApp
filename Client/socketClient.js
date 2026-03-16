@@ -15,7 +15,7 @@ import { popUpAcceptBtn, popUpIgnoreBtn } from "./domElements.js";
 // Socket.IO connection
 // Change to https://chatapp-1-91a9.onrender.com for production
 // Use http://localhost:3000 for local development
-export const socket = io("http://localhost:3000");
+export const socket = io("https://chatapp-1-91a9.onrender.com");
 
 let requesting = false;
 let requestedId = null;
