@@ -3,7 +3,7 @@
  * Handles all UI rendering functions for the chat application
  */
 
-import { messageView, socketView, popUpOverlay, popUpId } from "./domElements.js";
+import { messageView, socketView, notificationPopup, notificationHeader, notificationBody } from "./domElements.js";
 
 /**
  * Display a message in the message view
@@ -49,8 +49,10 @@ export function displaySocket(socketArray) {
  * @param {string} id - The sender's ID to display in the popup
  */
 export function idRequestNotice(id) {
-    popUpOverlay.classList.remove("hide");
-    popUpId.textContent = id;
+    document.getElementById("request-id").textContent = id;
+    document.getElementById("request-id-expanded").textContent = id;
+    notificationPopup.classList.remove("hide");
+    notificationBody.classList.add("hide");
 }
 
 /**
@@ -58,6 +60,5 @@ export function idRequestNotice(id) {
  * @param {string} id - The ID value to set (default null)
  */
 export function remove_idRequestNotice(id = null) {
-    popUpOverlay.classList.add("hide");
-    popUpId.textContent = id;
+    notificationPopup.classList.add("hide");
 }

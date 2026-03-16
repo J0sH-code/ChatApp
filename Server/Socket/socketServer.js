@@ -13,6 +13,8 @@ import { socketMap } from "./sessions.js";
  * Initialize socket event listeners for a new connection
  * @param {Socket} socket - The connected Socket.IO socket instance
  */
+
+
 export default function socketServer(socket) {
     console.log(io.sockets.adapter.sids.keys());
 

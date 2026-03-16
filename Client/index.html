@@ -62,22 +62,21 @@
                 </div>
                 </div>
 
-            <div class="popup-overlay hide">
-
-                <div class="popup">
-                    <h3>Incoming Message Request</h3>
-                    <p>
-                    You have a message request from<br>
-                    <strong id="request-id">abcd1234</strong>
-                    </p>
-
-                    <div class="popup-actions">
-                        <button id="accept-btn">Accept & Connect</button>
-                        <button id="ignore-btn">Ignore</button>
+            <div class="notification-popup hide" id="notification-popup">
+                <div class="notification-content">
+                    <div class="notification-header" id="notification-header">
+                        <span class="notification-label">Message Request</span>
+                        <span class="notification-id" id="request-id">abcd1234</span>
+                    </div>
+                    <div class="notification-body hide" id="notification-body">
+                        <p>You have a message request from:</p>
+                        <strong id="request-id-expanded">abcd1234</strong>
+                        <div class="notification-actions">
+                            <button id="accept-btn" class="accept-action">Accept & Connect</button>
+                            <button id="ignore-btn" class="ignore-action">Ignore</button>
+                        </div>
                     </div>
                 </div>
-
-               
             </div>
     </body>
 

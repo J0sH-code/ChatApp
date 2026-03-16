@@ -134,6 +134,129 @@ body {
     color: #000000;
 }
 
+/**
+ * Notification Popup Styles
+ * Collapsible notification in upper-right corner
+ */
+.notification-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 350px;
+    min-width: 200px;
+}
+
+.notification-popup.hide {
+    display: none;
+}
+
+.notification-content {
+    background: #1a1a1a;
+    border: 1px solid #B6B09F;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #1a1a1a, #2a2520);
+    border-bottom: 1px solid #B6B09F;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.notification-header:hover {
+    background: linear-gradient(135deg, #222831, #333333);
+}
+
+.notification-label {
+    color: #F2F2F2;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.notification-id {
+    color: #EAE4D5;
+    font-weight: 500;
+    font-size: 12px;
+    padding: 4px 8px;
+    background: rgba(182, 176, 159, 0.15);
+    border-radius: 6px;
+    font-family: 'Courier', monospace;
+}
+
+.notification-body {
+    padding: 14px;
+    color: #F2F2F2;
+    text-align: center;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification-body:not(.hide) {
+    display: flex;
+}
+
+.notification-body p {
+    margin: 0;
+    font-size: 13px;
+    color: #B6B09F;
+}
+
+.notification-body strong {
+    color: #EAE4D5;
+    font-family: 'Courier', monospace;
+    font-size: 14px;
+    padding: 6px 10px;
+    background: rgba(182, 176, 159, 0.1);
+    border-radius: 6px;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.notification-actions button {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #B6B09F;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.accept-action {
+    background-color: #B6B09F;
+    color: #000000;
+}
+
+.accept-action:hover {
+    background-color: #EAE4D5;
+    transform: translateY(-2px);
+}
+
+.ignore-action {
+    background: rgba(182, 176, 159, 0.2);
+    color: #F2F2F2;
+}
+
+.ignore-action:hover {
+    background: rgba(182, 176, 159, 0.35);
+    transform: translateY(-2px);
+}
+
 #show-content{
     height: 48vh;
     width: 48vw;

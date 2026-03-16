@@ -24,7 +24,9 @@ import {
     roomSection,
     cancelRoomBtn,
     cancelIdBtn,
-    socketView
+    socketView,
+    notificationHeader,
+    notificationBody
 } from "./domElements.js";
 
 import { displayMessage } from "./ui.js";
@@ -111,6 +113,13 @@ roomInput.addEventListener("keydown", (event) => {
 // Toggle dropdown menu
 menuButton.addEventListener("click", () => {
     dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+});
+
+/**
+ * Toggle notification popup expansion
+ */
+notificationHeader.addEventListener("click", () => {
+    notificationBody.classList.toggle("hide");
 });
 
 /**

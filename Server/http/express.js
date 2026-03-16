@@ -77,7 +77,6 @@ app.post("/login", (req, res) => {
     res.send({message: "Login successful", token});
 })
 
-
 /**
  * POST /post (POST Route)
  * Accepts JSON body and returns status
