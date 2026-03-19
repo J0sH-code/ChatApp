@@ -20,6 +20,7 @@ app.use(express.static(path.join(__dirname, "../../Client")));
 // Parse incoming JSON requests
 app.use(express.json());
 
+//Authentication middleware for JWT validation
 function authenticateToken(req, res, next) {
     const authHeader = req.headers.authorization;
     const token = authHeader.split(' ')[1];
@@ -62,6 +63,7 @@ app.get("/login", authenticateToken, (res, req) => {
     res.json(users.filter(user => user.username === req.user.name));
 })
 
+//LOGIN endpoint for future log in page functionality
 app.post("/login", (req, res) => {
     const {username, password} = req.body;
     
