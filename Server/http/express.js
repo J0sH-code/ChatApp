@@ -20,9 +20,22 @@ app.use(express.static(path.join(__dirname, "../../Client")));
 // Parse incoming JSON requests
 app.use(express.json());
 
-//Authentication middleware for JWT validation
+/**
+ * Authentication middleware for JWT validation
+ * Extracts and validates JWT token from Authorization header
+ * Attaches decoded user information to request object
+ * 
+ * BUG: Current implementation has a critical flaw - it attempts to split the authHeader 
+ * before checking if it exists, which will cause a server crash if no Authorization 
+ * header is provided. The check for authHeader should come before attempting to split it.
+ * 
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
 function authenticateToken(req, res, next) {
     const authHeader = req.headers.authorization;
+    // BUG: This line will throw an error if authHeader is undefined
     const token = authHeader.split(' ')[1];
 
     if (!authHeader) {
@@ -64,6 +77,7 @@ app.get("/login", authenticateToken, (res, req) => {
 })
 
 //LOGIN endpoint for future log in page functionality
+//BUG: Parameters are swapped in the callback function (req, res) vs (res, req)
 app.post("/login", (req, res) => {
     const {username, password} = req.body;
     
