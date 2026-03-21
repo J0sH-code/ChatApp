@@ -70,10 +70,11 @@ app.get("/", (req, res) => {
     res.send({ status: "Get route working" });
 })
 
-app.get("/login", authenticateToken, (res, req) => {
+app.get("/login", authenticateToken, (req, res) => {
     console.log(req.user);
+    console.log(users.filter(user => user.username === req.user.username));
     
-    res.json(users.filter(user => user.username === req.user.name));
+    res.json(users.filter(user => user.username === req.user.username));
 })
 
 //LOGIN endpoint for future log in page functionality
