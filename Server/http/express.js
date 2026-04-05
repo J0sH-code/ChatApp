@@ -8,6 +8,7 @@ import express from 'express';
 import path from "path";
 import { fileURLToPath } from "url";
 import  jwt  from 'jsonwebtoken';
+import databaseRouter from './database.js';
 
 const app = express();
 
@@ -119,5 +120,12 @@ app.patch("/patch", (req, res) => {
 app.delete("/delete", (req, res) => {
     res.send({ status: "Delete route working" });
 })
+
+/**
+ * Mount database router
+ * All database endpoints are prefixed with /db
+ * Examples: GET /db/users, POST /db/messages, etc.
+ */
+app.use('/db', databaseRouter);
 
 export default app;
