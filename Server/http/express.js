@@ -8,6 +8,7 @@ import express from 'express';
 import path from "path";
 import { fileURLToPath } from "url";
 import  jwt  from 'jsonwebtoken';
+import { db, profileModel } from './connectDb.js';
 
 const app = express();
 
@@ -15,6 +16,7 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+app.use(express.urlencoded({ extended: true }));
 // Serve static files (HTML, CSS, JS) from the Client folder
 app.use(express.static(path.join(__dirname, "../../Client")));
 // Parse incoming JSON requests
@@ -99,9 +101,21 @@ app.post("/login", (req, res) => {
  * Accepts JSON body and returns status
  * Testing endpoint for POST requests
  */
-app.post("/post", (req, res) => {
-    const requestContent = req.body;
-    res.send({ status: "Post route working" });
+app.post("/createAccount", (req, res) => {
+    const profile = new profileModel ({
+        username: req.body.name,
+        age: req.body.age,
+        email: req.body.age
+    });
+
+    try {
+        profile.save();
+    } catch (error) {
+        res.status(500).send("Error saving data");
+    } finally {
+        res.redirect("/thank-you");
+    }
+    //res.send({ status: "Post route working" });
 })
 
 /**
