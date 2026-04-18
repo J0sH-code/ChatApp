@@ -23,6 +23,8 @@ function inputCheck(input, reasonContent) {
     if (input == null) {
         const reason = `${reasonContent} not recieved`;
         this.socket.emit("server-error", reason);
+    } else {
+        return {ok: false, reason: `${reasonContent} parameter is empty`}
     }
 }
 
@@ -76,7 +78,10 @@ export default class handlers {
         if (socketMap.get(this.socket.id).sessionMode === "direct") {
             const connectedSocket = socketMap.get(this.socket.id).connected_id;
 
-            io.to(connectedSocket).emit("direct-socket-disconnect", new_activeSockets, JSON.stringify(disconnectMessage(this.socket.id)));
+            io.to(connectedSocket).emit("direct-socket-disconnect", 
+                new_activeSockets, 
+                JSON.stringify(disconnectMessage(this.socket.id))
+            );
             setPublic(connectedSocket);
         }
         socketMap.delete(this.socket.id);
