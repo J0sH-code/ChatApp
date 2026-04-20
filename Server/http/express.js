@@ -8,7 +8,7 @@ import express from 'express';
 import path from "path";
 import { fileURLToPath } from "url";
 import  jwt  from 'jsonwebtoken';
-import { db, profileModel } from './connectDb.js';
+
 
 const app = express();
 

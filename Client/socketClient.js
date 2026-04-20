@@ -10,7 +10,7 @@ import {
     idRequestNotice, 
     remove_idRequestNotice 
 } from "./ui.js";
-import { popUpAcceptBtn, popUpIgnoreBtn } from "./domElements.js";
+import { popUpAcceptBtn, popUpIgnoreBtn, connectionIdLabel } from "./domElements.js";
 
 // Socket.IO connection
 // Change to https://chatapp-1-91a9.onrender.com for production
@@ -32,7 +32,8 @@ export function setupSocketListeners() {
      * Initializes public mode key for initial broadcast capability
      */
     socket.on("connect", async () => {
-        displayMessage(`You connected with id: ${socket.id}`);
+        connectionIdLabel.textContent = `You connected with id: ${socket.id}`;
+        //displayMessage(`You connected with id: ${socket.id}`);
         // Set key for public mode (shared by all clients in public mode)
         await setSharedKey("public-shared-key");
     });
@@ -47,8 +48,8 @@ export function setupSocketListeners() {
         const decryptedMessage = await decryptMessage(message, currentKey);
         const messageObj = JSON.parse(decryptedMessage);
 
-        displayMessage(`Recieved: ${messageObj.content}`);
-        console.log(message);
+        displayMessage(`Recieved: ${messageObj.content}`, messageObj.senderID);
+        console.log(messageObj);
     });
 
     /**

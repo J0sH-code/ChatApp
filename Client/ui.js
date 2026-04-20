@@ -9,11 +9,35 @@ import { messageView, socketView, notificationPopup, notificationHeader, notific
  * Display a message in the message view
  * @param {string} message - The message to display
  */
-export function displayMessage(message) {
+export function displayMessage(message, senderId) {
     let messageValue = document.createElement("div");
-    messageValue.textContent = message;
     messageValue.style.padding = "2.5px";
-    messageValue.classList.add("message-texts")
+    messageValue.classList.add("message-texts");
+
+    
+
+    // Check if message starts with 'Sent:' or 'Recieved:' and style accordingly
+    if (message.startsWith("Sent:")) {
+        const label = document.createElement("span");
+        label.textContent = "Sent:";
+        label.classList.add("sent-label");
+        messageValue.appendChild(label);
+        messageValue.appendChild(document.createTextNode(message.substring(5)));
+    } else if (message.startsWith("Recieved:")) {
+        const label = document.createElement("span");
+        label.textContent = "Recieved:";
+        label.classList.add("received-label");
+        messageValue.appendChild(label);
+        messageValue.appendChild(document.createTextNode(message.substring(9)));
+
+        let senderAddr = document.createElement("span");
+        senderAddr.textContent = ` - ${senderId}`;
+        senderAddr.classList.add("senderId-label");
+        messageValue.appendChild(senderAddr);
+    } else {
+        messageValue.textContent = message;
+    }
+    
     messageView.append(messageValue);
 }
 

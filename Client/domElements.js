@@ -25,3 +25,4 @@ export const roomSection = document.getElementById("roomSection");
 export const idSection = document.getElementById("idSection");
 export const cancelRoomBtn = document.getElementById("cancelRoomBtn");
 export const cancelIdBtn = document.getElementById("cancelIdBtn");
+export const connectionIdLabel = document.getElementById("connection-Id");

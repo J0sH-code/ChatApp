@@ -10,9 +10,10 @@
         <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
                       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
                       crossorigin="anonymous"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-                                                                                             integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        <title>ChatApp</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Ballet:opsz@16..72&family=Bitcount+Single:wght@100..900&family=Caveat:wght@400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Italianno&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Meow+Script&family=Monsieur+La+Doulaise&family=Play:wght@400;700&family=Quicksand:wght@300..700&family=Saira+Stencil:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <title>CipherLink</title>
     </head>
 
     <body>
@@ -22,12 +23,14 @@
 
             <div class="title">
                 <div class="chatapp-title">
-                    <h1>ChatApp</h1>
+                    <h1>CipherLink</h1>
                 </div>
             </div>
-
+            
             <div class="message-holder">
-                <div id="show-content"></div>
+                <div id="show-content">
+                    <p id="connection-Id">You connected with id: </p>
+                </div>
             </div>
 
 
@@ -62,7 +65,7 @@
                 </div>
                 </div>
 
-            <div class="notification-popup " id="notification-popup">
+            <div class="notification-popup hide" id="notification-popup">
                 <div class="notification-content">
                     <div class="notification-header" id="notification-header">
                         <span class="notification-label">Message Request</span>

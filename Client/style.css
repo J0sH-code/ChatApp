@@ -43,9 +43,7 @@ body {
     display: flex;
     align-items: center;
     padding: 0 20px;
-    font-family: 'Courier', monospace;
-    font-weight: bold;
-    
+
     background: linear-gradient(
         135deg,
         #000000,
@@ -62,7 +60,7 @@ body {
     width: 20%;
     border-radius: 20px;
     color: white;
-    font-family: 'Courier', monospace;
+    font-family: "Saira Stencil", monospace;
     text-align: center;
     text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     font-weight: bold;
@@ -78,6 +76,32 @@ body {
     overflow-y: auto;
 
     background: #000000;
+}
+
+.sent-label {
+    color: #ff69b4;
+    font-weight: bold;
+}
+
+.received-label {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+#connection-Id {
+    font-family: monospace;
+    font-size: 14px;
+    color: rgb(4, 181, 204);
+    padding: 5px;
+}
+
+.senderId-label {
+    color: rgb(99, 99, 99);
+    font-size: 10px;
+}
+
+.message-texts {
+    font-family: monospace;
 }
 
 .message {
@@ -134,6 +158,10 @@ body {
     color: #000000;
 }
 
+.socketId:hover {
+    cursor: pointer;
+}
+
 /**
  * Notification Popup Styles
  * Collapsible notification in upper-right corner
@@ -145,6 +173,7 @@ body {
     z-index: 1000;
     max-width: 350px;
     min-width: 200px;
+    font-family: "Bitcount Single", Courier, monospace;
 }
 
 .notification-popup.hide {
