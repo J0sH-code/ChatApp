@@ -70,52 +70,59 @@ This system **does not implement full end-to-end encryption security**. Since ke
 ---
 
 ## Project Structure
+```
+
 Server/
 │
-├── index.js # Entry point (server + socket initialization)
-├── config.env # Environment variables
+├── index.js               # Entry point (server + socket initialization)
+├── config.env             # Environment variables
 │
 ├── http/
-│ └── express.js # Express app configuration
+│   └── express.js         # Express app configuration
 │
 ├── socket/
-│ ├── socketServer.js # Socket.IO connection setup
-│ ├── handlers.js # Event handlers
-│ ├── sessions.js # Session state management
-│ └── router.js # Message routing logic
+│   ├── socketServer.js    # Socket.IO connection setup
+│   ├── handlers.js        # Event handlers (message, room, direct)
+│   ├── sessions.js        # Session state management (Map)
+│   └── router.js          # Message routing logic
 │
 Client/
 │
 ├── index.html
-├── socket.js # Socket client + listeners
-├── encryption.js # AES encryption module
-├── ui.js # UI logic
-└── domElements.js # DOM references
+├── socket.js          # Socket client + event listeners
+├── encryption.js      # AES encryption module
+├── ui.js              # UI rendering logic
+└─ domElements.js     # DOM references
 
-
----
+```
 
 ## Getting Started
 
 ### 1. Clone the repository
+```
 git clone https://github.com/J0sH-code/ChatApp.git
-cd ChatApp
 
+cd ChatApp
+```
 
 ### 2. Setup environment variables
 
 Create a `config.env` file inside the `Server/` directory:
+```
 PORT_NUMBER=3000
-
+```
 
 ### 3. Install dependencies
+```
 cd Server
-npm install
 
+npm install
+```
 
 ### 4. Run the server
+```
 node index.js
-
+```
 
 ### 5. Open the client
 
