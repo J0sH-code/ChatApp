@@ -70,3 +70,81 @@ This system **does not implement full end-to-end encryption security**. Since ke
 ---
 
 ## Project Structure
+Server/
+│
+├── index.js # Entry point (server + socket initialization)
+├── config.env # Environment variables
+│
+├── http/
+│ └── express.js # Express app configuration
+│
+├── socket/
+│ ├── socketServer.js # Socket.IO connection setup
+│ ├── handlers.js # Event handlers
+│ ├── sessions.js # Session state management
+│ └── router.js # Message routing logic
+│
+Client/
+│
+├── index.html
+├── socket.js # Socket client + listeners
+├── encryption.js # AES encryption module
+├── ui.js # UI logic
+└── domElements.js # DOM references
+
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
+git clone https://github.com/J0sH-code/ChatApp.git
+cd ChatApp
+
+
+### 2. Setup environment variables
+
+Create a `config.env` file inside the `Server/` directory:
+PORT_NUMBER=3000
+
+
+### 3. Install dependencies
+cd Server
+npm install
+
+
+### 4. Run the server
+node index.js
+
+
+### 5. Open the client
+
+Open `Client/index.html` in your browser.
+
+---
+
+## Current Limitations
+
+- No authentication or user identity system  
+- No message persistence  
+- Deterministic keys (not securely exchanged)  
+- No forward secrecy or key rotation  
+- Not production-ready security  
+
+---
+
+## Future Improvements
+
+- Implement secure key exchange (Diffie-Hellman / ECDH)  
+- Add authentication system  
+- Integrate a database for message storage  
+- Improve UI/UX  
+- Add presence and typing indicators  
+- Strengthen encryption model toward real end-to-end security  
+
+---
+
+## Author
+
+**Josh Ryle R. Santeno**  
+Aspiring backend developer focused on building real-world systems and understanding how things work under the hood.
