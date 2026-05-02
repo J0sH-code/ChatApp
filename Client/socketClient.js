@@ -15,7 +15,7 @@ import { popUpAcceptBtn, popUpIgnoreBtn, connectionIdLabel } from "./domElements
 // Socket.IO connection
 // Change to https://chatapp-1-91a9.onrender.com for production
 // Use http://localhost:3000 for local development
-export const socket = io("https://chatapp-1-91a9.onrender.com");
+export const socket = io("http://localhost:3000");
 
 let requesting = false;
 let requestedId = null;
