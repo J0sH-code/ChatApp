@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.urlencoded({ extended: true }));
-// Serve static files (HTML, CSS, JS) from the Client folder
+// Serve static files (HTML, CSS, JS) from the Client folder 
 app.use(express.static(path.join(__dirname, "../../Client")));
 // Parse incoming JSON requests
 app.use(express.json());
